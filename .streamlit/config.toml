@@ -1,0 +1,11 @@
+# .streamlit/config.toml
+
+[theme]
+primaryColor = "#2E5BFF"
+backgroundColor = "#F8F9FA"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1E293B"
+
+# Streamlit-specific font settings
+font = "verdana"
+baseFontSize = 12
