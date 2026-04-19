@@ -18,11 +18,15 @@ st.markdown("""
     /* Hiding Streamlit Branding, GitHub, Share, and Status Badges */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    header {visibility: hidden;}
 
     /* Removes the "Hosted with Streamlit" badge in bottom right */
     .stAppDeployButton {display:none;}
     [data-testid="stStatusWidget"] {visibility: hidden;}    
+    
+    [data-testid="stStatusWidget"] {
+        visibility: hidden;
+        display: none !important;
+    }
     
     /* Removes the "Manage App" and other viewer-side elements */
     #viewer-badge {display: none !important;}    
