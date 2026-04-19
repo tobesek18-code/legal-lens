@@ -4,10 +4,15 @@ from PyPDF2 import PdfReader
 from fpdf import FPDF
 from supabase import create_client, Client
 
-# MUST BE FIRST
-st.set_page_config(page_title="LegalLens AI", page_icon="⚖️", layout="centered")
+# MUST BE FIRST - Set to expanded to help with mobile visibility
+st.set_page_config(
+    page_title="LegalLens AI",
+    page_icon="⚖️",
+    layout="centered",
+    initial_sidebar_state="expanded"
+)
 
-# --- EXECUTIVE UI OVERRIDE (Slate & Silver) ---
+# --- EXECUTIVE UI OVERRIDE ---
 st.markdown("""
     <style>
     /* Hiding Streamlit Branding, GitHub, Share, and Status Badges */
@@ -17,9 +22,13 @@ st.markdown("""
 
     /* Removes the "Hosted with Streamlit" badge in bottom right */
     .stAppDeployButton {display:none;}
-    [data-testid="stStatusWidget"] {visibility: hidden;}
-
+    [data-testid="stStatusWidget"] {visibility: hidden;}    
+    
     /* Removes the "Manage App" and other viewer-side elements */
+    #viewer-badge {display: none !important;}    
+    
+    .stAppDeployButton {display:none;}
+    [data-testid="stStatusWidget"] {visibility: hidden;}
     #viewer-badge {display: none !important;}
 
     /* Executive Font & Palette */
