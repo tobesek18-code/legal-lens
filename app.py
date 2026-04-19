@@ -5,40 +5,38 @@ from fpdf import FPDF
 from supabase import create_client, Client
 
 # MUST BE FIRST
-# st.set_page_config(page_title="LegalLens AI", page_icon="⚖️")
-st.write("### ⚖️ LegalLens: Real Estate AI")
-st.caption("Analyze rental agreements against **2026 local housing laws**.")
-# --- EXECUTIVE UI OVERRIDE ---
+st.set_page_config(page_title="LegalLens AI", page_icon="⚖️")
+
+# --- EXECUTIVE UI OVERRIDE (Slate & Ice) ---
 st.markdown("""
     <style>
-    /* Hides the GitHub icon and Share menu but KEEPS the toggle visible */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {background-color: transparent;} 
 
-    /* Executive Font & Palette */
     html, body, [class*="css"] {
         font-family: "Verdana", sans-serif;
+        color: #f8fafc;
     }
-        h1 {
-            font-size: 1.5rem !important;
-            font-weight: 600 !important;
-            color: #f8fafc; /* Ice color to match your palette */
-        }
-   
+
+    h3 {
+        font-size: 1.4rem !important;
+        font-weight: 600 !important;
+        color: #f8fafc;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-# Use st.secrets for Streamlit Cloud Deployment
+# Client Connections
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 supabase: Client = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
+
 
 # --- Helper Functions ---
 def create_pdf(report_text):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
-    # Sanitize Unicode for basic FPDF (standard Latin-1)
     cleaned_text = report_text.encode('latin-1', 'ignore').decode('latin-1')
     pdf.multi_cell(0, 10, txt=cleaned_text)
     return pdf.output(dest='S').encode('latin-1')
@@ -58,19 +56,56 @@ def mark_key_as_used(user_key):
     supabase.table("access_keys").update({"is_used": True}).eq("key", user_key).execute()
 
 
-# --- Access Control ---
+# --- Access Control Logic ---
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
+# --- LANDING PAGE (Visible only if NOT authenticated) ---
 if not st.session_state.authenticated:
-    st.sidebar.title("🔐 Premium Access")
-    st.sidebar.info("Analyze your lease with our 2026 AI Legal Auditor.")
-    st.sidebar.link_button("Buy Access Key ($9.99) 💳", st.secrets["STRIPE_PAYMENT_LINK"])
+    st.write("### ⚖️ LegalLens: Real Estate AI")
+    st.caption("Protect your rights with **2026 AI-Powered Lease Auditing**.")
 
+    # Value Proposition
+    st.markdown("""
+    Don't sign a lease until you've scanned it. **LegalLens** identifies 'red flags' such as 
+    hidden costs, unfair rules, or illegal termination penalties. Our AI analyzes your 
+    agreement against local **2026 housing laws** to ensure you aren't being exploited.
+    """)
+
+    st.divider()
+
+    # How it Works Section
+    st.write("#### 🛠️ How it Works")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.write("**1. Secure Upload**")
+        st.caption("Drag and drop your PDF lease into our secure analyzer.")
+    with col2:
+        st.write("**2. AI Audit**")
+        st.caption("Our system scans for predatory clauses based on your jurisdiction.")
+    with col3:
+        st.write("**3. Negotiate**")
+        st.caption("Download a professional PDF report to present to your landlord.")
+
+    st.divider()
+
+    # Access Key Retrieval Process (The "Why" and "How")
+    st.write("#### 🔑 Obtaining Your Access Key")
+    st.markdown("""
+    To maintain high-speed AI processing and legal database accuracy, we use a 
+    single-use access key system.
+    1. **Purchase**: Click the 'Buy Access Key' button in the sidebar.
+    2. **Instant Delivery**: Upon successful payment, your unique key is generated and **sent to your email address** immediately.
+    3. **Activation**: Enter that key in the sidebar to unlock the full professional analysis suite.
+    """)
+
+    # Sidebar for Payment & Entry
+    st.sidebar.title("🔐 Premium Access")
+    st.sidebar.link_button("Buy Access Key ($9.99) 💳", st.secrets["STRIPE_PAYMENT_LINK"])
     st.sidebar.divider()
 
     input_key = st.sidebar.text_input("Enter Access Key", type="password")
-    if st.sidebar.button("Unlock App"):
+    if st.sidebar.button("Unlock Analysis"):
         valid, msg = check_db_for_key(input_key)
         if valid:
             st.session_state.authenticated = True
@@ -80,11 +115,11 @@ if not st.session_state.authenticated:
             st.sidebar.error(msg)
     st.stop()
 
-# --- Main App Logic ---
+# --- MAIN APP LOGIC (Visible ONLY after key is entered) ---
 if "analysis_done" not in st.session_state:
     st.session_state.analysis_done = False
 
-# Sidebar Tools once unlocked
+st.write("### 📑 Analysis Dashboard")
 if st.sidebar.button("Logout"):
     st.session_state.clear()
     st.rerun()
@@ -99,13 +134,12 @@ if uploaded_file:
         st.download_button("📥 Download Report", create_pdf(st.session_state.last_report), "Lease_Report.pdf")
         st.markdown(st.session_state.last_report)
     else:
-        if st.button("Start AI Legal Audit"):
-            with st.spinner("Analyzing against local 2026 statutes..."):
+        if st.button("Run AI Legal Audit"):
+            with st.spinner("Reviewing clauses against local statutes..."):
                 reader = PdfReader(uploaded_file)
                 text = " ".join([p.extract_text() for p in reader.pages if p.extract_text()])
 
-                # Context-aware Prompting
-                prompt = f"You are a Senior Real Estate Lawyer specializing in {location}. Review this lease for illegal clauses, hidden fees, and points of negotiation."
+                prompt = f"You are a Senior Real Estate Lawyer specializing in {location}. Review for illegal clauses and hidden fees."
 
                 response = client.chat.completions.create(
                     model="gpt-4o",
@@ -117,8 +151,6 @@ if uploaded_file:
 
                 report = response.choices[0].message.content
                 st.session_state.last_report = report
-
-                # Commit to DB
                 mark_key_as_used(st.session_state.current_key)
                 st.session_state.analysis_done = True
 
