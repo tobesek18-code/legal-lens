@@ -10,10 +10,17 @@ st.set_page_config(page_title="LegalLens AI", page_icon="⚖️", layout="center
 # --- EXECUTIVE UI OVERRIDE (Slate & Silver) ---
 st.markdown("""
     <style>
-    /* Hiding Streamlit clutter */
+    /* Hiding Streamlit Branding, GitHub, Share, and Status Badges */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+
+    /* Removes the "Hosted with Streamlit" badge in bottom right */
+    .stAppDeployButton {display:none;}
+    [data-testid="stStatusWidget"] {visibility: hidden;}
+
+    /* Removes the "Manage App" and other viewer-side elements */
+    #viewer-badge {display: none !important;}
 
     /* Executive Font & Palette */
     html, body, [class*="css"] {
@@ -25,7 +32,7 @@ st.markdown("""
         border-radius: 8px;
     }
 
-    /* PROFESSIONAL SLATE BUTTONS (Main & Sidebar) */
+    /* PROFESSIONAL SLATE BUTTONS */
     div.stButton > button, 
     div.stDownloadButton > button, 
     label[data-testid="stFileUploaderPreSignUrl"] {
@@ -53,7 +60,6 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
-
 # Client Connections
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 supabase: Client = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
