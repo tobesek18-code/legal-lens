@@ -5,26 +5,31 @@ from fpdf import FPDF
 from supabase import create_client, Client
 
 # MUST BE FIRST
-st.set_page_config(page_title="LegalLens AI", page_icon="⚖️")
+st.set_page_config(page_title="LegalLens AI", page_icon="⚖️", layout="centered")
 
-# --- EXECUTIVE UI OVERRIDE (Deep Slate & Silver) ---
+# --- EXECUTIVE UI OVERRIDE (Slate & Silver) ---
 st.markdown("""
     <style>
+    /* Hiding Streamlit clutter */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    header {background-color: transparent;} 
+    header {visibility: hidden;}
 
     /* Executive Font & Palette */
     html, body, [class*="css"] {
         font-family: "Verdana", sans-serif;
-        color: #f1f5f9; /* Ice White text */
     }
 
-    /* PROFESSIONAL SLATE BUTTONS (Including Upload/Download) */
+    /* THE CARD LOOK FOR SIDEBAR EXPANDER */
+    div[data-testid="stExpander"] {
+        border-radius: 8px;
+    }
+
+    /* PROFESSIONAL SLATE BUTTONS (Main & Sidebar) */
     div.stButton > button, 
     div.stDownloadButton > button, 
     label[data-testid="stFileUploaderPreSignUrl"] {
-        background-color: #334155 !important; /* Steel Slate */
+        background-color: #334155 !important;
         color: #ffffff !important;
         border: 1px solid #475569 !important;
         border-radius: 4px !important;
@@ -36,14 +41,11 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    div.stButton > button:hover, 
-    div.stDownloadButton > button:hover {
+    div.stButton > button:hover {
         background-color: #475569 !important;
         border-color: #94a3b8 !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
     }
 
-    /* Smaller Title Styling */
     h3 {
         font-size: 1.4rem !important;
         font-weight: 600 !important;
@@ -74,57 +76,58 @@ def check_db_for_key(user_key):
             return True, "Success"
         return False, "Invalid or used key."
     except Exception as e:
-        return False, f"Database connection issue: {e}"
+        return False, f"Connection issue: {e}"
 
 
 def mark_key_as_used(user_key):
     supabase.table("access_keys").update({"is_used": True}).eq("key", user_key).execute()
 
 
-# --- Access Control Logic ---
+# --- Authentication Logic ---
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
-# --- LANDING PAGE (Marketing & Retrieval) ---
+# --- LANDING PAGE (Only visible if NOT authenticated) ---
 if not st.session_state.authenticated:
     st.write("### ⚖️ LegalLens: Real Estate AI")
-    st.caption("Protect your rights with **2026 AI-Powered Lease Auditing**.")
+    st.caption("Analyze rental agreements against **2026 local housing laws**.")
 
     st.markdown("""
-    Don't sign a lease until you've scanned it. **LegalLens** identifies 'red flags' such as 
-    hidden costs, unfair rules, or illegal termination penalties.
+    Legal agreements often contain predatory clauses that violate local statutes. **LegalLens** provides an instant professional audit to protect your security deposit and tenancy rights.
     """)
 
     st.divider()
 
+    # Restored "How it Works" including Access Key process
     st.write("#### 🛠️ How it Works")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.write("**1. Secure Upload**")
-        st.caption("Drag and drop your PDF lease into our secure analyzer.")
+        st.write("**1. Get Your Key**")
+        st.caption("Purchase a key via Stripe. It is emailed to you instantly.")
     with col2:
-        st.write("**2. AI Audit**")
-        st.caption("Our system scans for predatory clauses based on 2026 laws.")
+        st.write("**2. Secure Audit**")
+        st.caption("Upload your PDF. AI scans for illegal clauses based on 2026 laws.")
     with col3:
         st.write("**3. Negotiate**")
         st.caption("Download a professional PDF report to present to your landlord.")
 
     st.divider()
 
-    st.write("#### 🔑 Obtaining Your Access Key")
-    st.markdown("""
-    1. **Purchase**: Click the 'Buy Access Key' button in the sidebar.
-    2. **Instant Delivery**: Your unique key is **sent to your email address** immediately after payment.
-    3. **Activation**: Enter that key in the sidebar to unlock the analyzer.
-    """)
+    # Sidebar: Collapsable Access Control
+    st.sidebar.title("🔐 Access Portal")
 
-    # Sidebar for Payment & Entry
-    st.sidebar.title("🔐 Premium Access")
-    st.sidebar.link_button("Buy Access Key ($9.99) 💳", st.secrets["STRIPE_PAYMENT_LINK"])
+    with st.sidebar.expander("💳 Professional Access", expanded=True):
+        st.markdown("""
+            **One-time analysis for $9.99.**
+
+            Key will be emailed immediately after payment.
+        """)
+        st.sidebar.link_button("Buy Access Key 💳", st.secrets["STRIPE_PAYMENT_LINK"])
+
     st.sidebar.divider()
 
-    input_key = st.sidebar.text_input("Enter Access Key", type="password")
-    if st.sidebar.button("Unlock Analysis"):
+    input_key = st.sidebar.text_input("Enter Access Key", type="password", placeholder="PASTE-KEY-HERE")
+    if st.sidebar.button("Unlock Dashboard"):
         valid, msg = check_db_for_key(input_key)
         if valid:
             st.session_state.authenticated = True
@@ -132,9 +135,10 @@ if not st.session_state.authenticated:
             st.rerun()
         else:
             st.sidebar.error(msg)
+
     st.stop()
 
-# --- ANALYSIS DASHBOARD (Only visible after unlock) ---
+# --- MAIN DASHBOARD (Visible ONLY after unlock) ---
 if "analysis_done" not in st.session_state:
     st.session_state.analysis_done = False
 
@@ -155,16 +159,14 @@ if uploaded_file:
         st.markdown(st.session_state.last_report)
     else:
         if st.button("Run AI Legal Audit"):
-            with st.spinner("Reviewing clauses against local statutes..."):
+            with st.spinner("Analyzing against 2026 statutes..."):
                 reader = PdfReader(uploaded_file)
                 text = " ".join([p.extract_text() for p in reader.pages if p.extract_text()])
-
-                prompt = f"You are a Senior Real Estate Lawyer specializing in {location}. Review for illegal clauses."
 
                 response = client.chat.completions.create(
                     model="gpt-4o",
                     messages=[
-                        {"role": "system", "content": prompt},
+                        {"role": "system", "content": f"Legal expert in {location}"},
                         {"role": "user", "content": text}
                     ]
                 )
@@ -173,7 +175,6 @@ if uploaded_file:
                 st.session_state.last_report = report
                 mark_key_as_used(st.session_state.current_key)
                 st.session_state.analysis_done = True
-
                 st.markdown(report)
                 st.download_button("📥 Download PDF Report", create_pdf(report), "Lease_Report.pdf")
                 st.rerun()
