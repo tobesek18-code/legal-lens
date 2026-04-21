@@ -74,16 +74,13 @@ st.markdown("""
     }
     </style>
     <script>
-    
-    
-// To break out of iframe and access the parent window
-const streamlitDoc = window.parent.document;
+        const streamlitDoc = window.parent.document;
 
-// Make the replacement
-document.addEventListener("DOMContentLoaded", function(event){
-        streamlitDoc.getElementsByTagName("footer")[0].innerHTML = "Provided by <a href='https://yourwebsite.com' target='_blank' class='css-z3au9t egzxvld2'>Your Link Display Text Here</a>";
-    });
-</script>
+    // Make the replacement
+    document.addEventListener("DOMContentLoaded", function(event){
+            streamlitDoc.getElementsByTagName("footer")[0].innerHTML = "Provided by <a href='https://yourwebsite.com' target='_blank' class='css-z3au9t egzxvld2'>Your Link Display Text Here</a>";
+        });
+    </script>
     """, unsafe_allow_html=True)
 # Client Connections
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
@@ -149,7 +146,7 @@ if not st.session_state.authenticated:
 
     with st.sidebar.expander("💳 Professional Access", expanded=True):
         st.markdown("""
-            **One-time analysis for $49.99.**
+            **One-time analysis for $9.99.**
 
             Key will be emailed immediately after payment.
         """)
