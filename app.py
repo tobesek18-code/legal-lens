@@ -15,11 +15,7 @@ st.set_page_config(
 # --- EXECUTIVE UI OVERRIDE ---
 st.markdown("""
     <style>
-    a {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-}
+    
     /* Hiding Streamlit Branding, GitHub, Share, and Status Badges */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
