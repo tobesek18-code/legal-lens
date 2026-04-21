@@ -138,7 +138,7 @@ if not st.session_state.authenticated:
 
     with st.sidebar.expander("💳 Professional Access", expanded=True):
         st.markdown("""
-            **One-time analysis for $9.99.**
+            **One-time analysis for $49.99.**
 
             Key will be emailed immediately after payment.
         """)
@@ -178,7 +178,9 @@ if uploaded_file:
         st.download_button("📥 Download Report", create_pdf(st.session_state.last_report), "Lease_Report.pdf")
         st.markdown(st.session_state.last_report)
     else:
-        if st.button("Run AI Legal Audit"):
+        if st.button("Run AI Audit"):
+        if st.button("Run AI Audit"):
+        if st.button("Run AI Audit"):
             with st.spinner("Analyzing against 2026 statutes..."):
                 reader = PdfReader(uploaded_file)
                 text = " ".join([p.extract_text() for p in reader.pages if p.extract_text()])
