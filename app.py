@@ -125,7 +125,7 @@ if not st.session_state.authenticated:
     st.caption("Analyze rental agreements against **2026 local housing laws**.")
 
     st.markdown("""
-    Legal agreements often contain predatory clauses that violate local statutes. **LegalLens** provides an instant professional audit to protect your security deposit and tenancy rights.
+    Legal agreements often contain incompliant clauses that violate local statutes. **LegalLens** provides an instant professional audit agreements for tenants, landlords and property agents.
     """)
 
     st.divider()
@@ -138,10 +138,10 @@ if not st.session_state.authenticated:
         st.caption("Purchase a key via Stripe. It is emailed to you instantly.")
     with col2:
         st.write("**2. Secure Audit**")
-        st.caption("Upload your PDF. AI scans for illegal clauses based on 2026 laws.")
+        st.caption("Upload your PDF. AI scans for incompliant clauses based on 2026 laws.")
     with col3:
         st.write("**3. Negotiate**")
-        st.caption("Download a professional PDF report to present to your landlord.")
+        st.caption("Download a professional PDF report to present to your tenant/landlord/property agent.")
 
     st.divider()
 
