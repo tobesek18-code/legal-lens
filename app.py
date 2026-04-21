@@ -73,8 +73,9 @@ st.markdown("""
         color: #f8fafc;
     }
     </style>
+    
     <script>
-        const streamlitDoc = window.parent.document;
+    const streamlitDoc = window.parent.document;
 
     // Make the replacement
     document.addEventListener("DOMContentLoaded", function(event){
