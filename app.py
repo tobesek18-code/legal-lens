@@ -76,7 +76,11 @@ st.markdown("""
   display: none !important;
 }
     </style>
-    
+    """, unsafe_allow_html=True)
+
+
+
+hide_st_style = """
     <script>
     const streamlitDoc = window.parent.document;
 
@@ -85,7 +89,8 @@ st.markdown("""
             streamlitDoc.getElementsByTagName("footer")[0].innerHTML = "Provided by <a href='https://yourwebsite.com' target='_blank' class='css-z3au9t egzxvld2'>Your Link Display Text Here</a>";
         });
     </script>
-    """, unsafe_allow_html=True)
+    """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 # Client Connections
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 supabase: Client = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
