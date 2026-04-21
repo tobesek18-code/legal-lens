@@ -73,6 +73,17 @@ st.markdown("""
         color: #f8fafc;
     }
     </style>
+    <script>
+    
+    
+// To break out of iframe and access the parent window
+const streamlitDoc = window.parent.document;
+
+// Make the replacement
+document.addEventListener("DOMContentLoaded", function(event){
+        streamlitDoc.getElementsByTagName("footer")[0].innerHTML = "Provided by <a href='https://yourwebsite.com' target='_blank' class='css-z3au9t egzxvld2'>Your Link Display Text Here</a>";
+    });
+</script>
     """, unsafe_allow_html=True)
 # Client Connections
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
