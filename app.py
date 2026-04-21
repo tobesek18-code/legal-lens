@@ -72,9 +72,6 @@ st.markdown("""
         font-weight: 600 !important;
         color: #f8fafc;
     }
-
-    [data-testid="stToolbar"] {visibility: hidden !important;}
-    footer {visibility: hidden !important;}
     </style>
     
     <script>
