@@ -73,6 +73,14 @@ st.markdown("""
         color: #f8fafc;
     }
     </style>
+    <script>
+        const streamlitDoc = window.parent.document;
+
+    // Make the replacement
+    document.addEventListener("DOMContentLoaded", function(event){
+            streamlitDoc.getElementsByTagName("footer")[0].innerHTML = "Provided by <a href='https://yourwebsite.com' target='_blank' class='css-z3au9t egzxvld2'>Your Link Display Text Here</a>";
+        });
+    </script>
     """, unsafe_allow_html=True)
 # Client Connections
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
@@ -178,8 +186,6 @@ if uploaded_file:
         st.download_button("📥 Download Report", create_pdf(st.session_state.last_report), "Lease_Report.pdf")
         st.markdown(st.session_state.last_report)
     else:
-        if st.button("Run AI Audit"):
-        if st.button("Run AI Audit"):
         if st.button("Run AI Audit"):
             with st.spinner("Analyzing against 2026 statutes..."):
                 reader = PdfReader(uploaded_file)
