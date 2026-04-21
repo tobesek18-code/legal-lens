@@ -72,6 +72,9 @@ st.markdown("""
         font-weight: 600 !important;
         color: #f8fafc;
     }
+    [class^="_profilePreview_"] {
+  display: none !important;
+}
     </style>
     
     <script>
