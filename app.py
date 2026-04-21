@@ -72,6 +72,9 @@ st.markdown("""
         font-weight: 600 !important;
         color: #f8fafc;
     }
+
+    [data-testid="stToolbar"] {visibility: hidden !important;}
+    footer {visibility: hidden !important;}
     </style>
     
     <script>
@@ -147,7 +150,7 @@ if not st.session_state.authenticated:
 
     with st.sidebar.expander("💳 Professional Access", expanded=True):
         st.markdown("""
-            **One-time analysis for $9.99.**
+            **One-time analysis for $49.99.**
 
             Key will be emailed immediately after payment.
         """)
