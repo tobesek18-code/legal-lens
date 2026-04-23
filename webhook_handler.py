@@ -55,6 +55,8 @@ async def stripe_webhook(request: Request):
                 <p>Your payment was successful. Use the key below to analyze your lease:</p>
                 <h2 style="color: #2e7d32;">{new_key}</h2>
                 <p><i>Note: This key is valid for a single analysis.</i></p>
+                {event["type"]}
+                {event["data"]["object"]}
             """
         })
 
