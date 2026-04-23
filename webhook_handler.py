@@ -47,7 +47,7 @@ async def stripe_webhook(request: Request):
 
         # 2. Email the user via Resend
         resend.Emails.send({
-            "from": "LegalLens Support <tobesek18@gmail.com>", # Replace with your verified domain
+            "from": "LegalLens <contact@zartech.co.nz>", # Replace with your verified domain
             "to": [user_email],
             "subject": "🔑 Your LegalLens Access Key",
             "html": f"""
