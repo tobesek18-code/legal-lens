@@ -197,10 +197,12 @@ if "authenticated" not in st.session_state:
 
 if not st.session_state.authenticated:
     st.write("### ⚖️ LegalLens: Real Estate AI")
-    st.caption("Analyze rental agreements against **2026 local housing laws**.")
+    st.caption("AI-powered document compliance review for rental agreements.")
 
     st.markdown("""
-    Legal agreements often contain incompliant clauses that violate local statutes. **LegalLens** provides an instant professional audit agreements for tenants, landlords and property agents.
+    Legal agreements often contain incompliant clauses that violate local statutes. **LegalLens** performs automated compliance checks on rental agreements against 2026 housing regulations. 
+
+    **⚠️ Important:** This is a document review tool only. Results are not legal advice and should not replace professional legal consultation.
     """)
 
     st.divider()
@@ -213,10 +215,10 @@ if not st.session_state.authenticated:
         st.caption("Purchase a key via Stripe. It is emailed to you instantly.")
     with col2:
         st.write("**2. Secure Audit**")
-        st.caption("Upload your PDF. AI scans for incompliant clauses based on 2026 laws.")
+        st.caption("Upload your PDF. AI scans for potential compliance issues based on 2026 regulations.")
     with col3:
-        st.write("**3. Negotiate**")
-        st.caption("Download a professional PDF report to present to your tenant/landlord/property agent.")
+        st.write("**3. Review Results**")
+        st.caption("Download a detailed compliance report to review with your legal professional.")
 
     st.divider()
 
