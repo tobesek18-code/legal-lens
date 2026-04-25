@@ -5,7 +5,6 @@ from fpdf import FPDF
 from supabase import create_client, Client
 from knowledge_base import JURISDICTIONS
 
-# MUST BE FIRST - Set to expanded to help with mobile visibility
 st.set_page_config(
     page_title="LegalLens AI",
     page_icon="⚖️",
@@ -124,14 +123,78 @@ def check_db_for_key(user_key):
 
 
 def mark_key_as_used(user_key):
-    supabase.table("access_keys").update({"is_used": True}).eq("key", user_key).execute()
+    supabase.table("access_keys").update(
+        {"is_used": True}
+    ).eq("key", user_key).execute()
 
 
-# --- Authentication Logic ---
+def build_system_prompt(location, kb):
+    return f"""
+You are a tenancy agreement compliance reviewer specializing in residential rental law for {location}.
+
+Your task is to review tenancy agreements for legal compliance, missing mandatory clauses,
+unfair terms, hidden risks, and negotiation opportunities.
+
+IMPORTANT RULES:
+- Do NOT invent laws, clauses, or facts not present in the agreement
+- If something cannot be verified, clearly state: "Unable to verify from provided agreement"
+- Focus strictly on compliance review, not legal representation
+- This is NOT formal legal advice
+- Provide a confidence level for each finding: High / Medium / Low
+- Provide a severity level for each finding: Critical / High / Medium / Low
+- Quote the exact problematic clause when possible
+- Identify both problematic clauses and missing mandatory requirements
+- Suggest negotiation amendments where appropriate
+- Keep findings jurisdiction-specific to {location}
+
+Jurisdiction Knowledge:
+Statutes: {kb.get("statutes", "")}
+
+Mandatory Checks:
+{", ".join(kb.get("mandatory_checks", []))}
+
+Common Red Flags:
+{", ".join(kb.get("red_flags", []))}
+"""
+
+
+def build_user_prompt(text):
+    return f"""
+Review the following tenancy agreement for compliance with 2026 residential tenancy laws.
+
+Generate a structured report with:
+
+1. Executive Summary
+
+2. Critical Violations Found
+- issue
+- severity
+- confidence
+- clause quote
+- legal concern
+- recommendation
+
+3. Missing Mandatory Requirements
+
+4. Unfair or Risky Clauses
+
+5. Negotiation Suggestions
+
+6. Overall Risk Score (Low / Medium / High)
+Include a short reason for the score.
+
+7. Final Disclaimer
+State clearly this is a compliance review and not formal legal advice.
+
+Lease Agreement Text:
+
+{text}
+"""
+
+
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
-# --- LANDING PAGE (Only visible if NOT authenticated) ---
 if not st.session_state.authenticated:
     st.write("### ⚖️ LegalLens: Real Estate AI")
     st.caption("Analyze rental agreements against **2026 local housing laws**.")
@@ -190,46 +253,51 @@ st.write("### 📑 Analysis Dashboard")
 if st.sidebar.button("Logout"):
     st.session_state.clear()
     st.rerun()
-
-location = st.selectbox("Property Jurisdiction",
-                        ["New Zealand (RTA 2026)", "Australia (VIC/NSW/QLD)", "USA (NYC/CA/TX)", "Other"])
+location = st.selectbox(
+    "Property Jurisdiction",
+    list(JURISDICTIONS.keys()) + ["Other"]
+)
 
 uploaded_file = st.file_uploader("Upload Lease (PDF)", type="pdf")
 
-if uploaded_file:
-    if st.session_state.analysis_done:
-        st.success("Analysis Complete")
-        st.download_button("📥 Download Report", create_pdf(st.session_state.last_report), "Lease_Report.pdf")
-        st.markdown(st.session_state.last_report)
-    else:
-        if st.button("Run AI Legal Audit"):
-            with st.spinner("Analyzing against 2026 statutes..."):
-                reader = PdfReader(uploaded_file)
-                text = " ".join([p.extract_text() for p in reader.pages if p.extract_text()])
+if uploaded_file and st.button("Run AI Legal Audit"):
+    with st.spinner("Reviewing tenancy agreement..."):
+        reader = PdfReader(uploaded_file)
+        text = " ".join(
+            [p.extract_text() for p in reader.pages if p.extract_text()]
+        )
 
-                # Build enhanced prompt
-                system_content = f"You are a legal expert specializing in rental agreements for {location}. "
-                if location in JURISDICTIONS:
-                    kb = JURISDICTIONS[location]
-                    system_content += f"Key statutes: {kb['statutes']}. Common red flags to check for: {', '.join(kb['red_flags'])}. Mandatory requirements to verify: {', '.join(kb['mandatory_checks'])}."
-                else:
-                    system_content += "Focus on compliance with local housing laws, fair housing practices, and tenant protections."
+        kb = JURISDICTIONS.get(location, {
+            "statutes": "General local housing law compliance",
+            "mandatory_checks": [],
+            "red_flags": []
+        })
 
-                user_content = f"Please analyze the following lease agreement text for compliance with relevant 2026 laws and regulations. Identify any clauses that may be illegal, unfair, or non-compliant. Highlight red flags, missing mandatory elements, and provide recommendations for amendments or negotiations. Structure your report clearly with sections for Summary, Violations Found, Missing Requirements, and Suggestions.\n\nLease Text:\n{text}"
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            temperature=0,
+            messages=[
+                {
+                    "role": "system",
+                    "content": build_system_prompt(location, kb)
+                },
+                {
+                    "role": "user",
+                    "content": build_user_prompt(text)
+                }
+            ]
+        )
 
-                response = client.chat.completions.create(
-                    model="gpt-4o",
-                    temperature=0,
-                    messages=[
-                        {"role": "system", "content": system_content},
-                        {"role": "user", "content": user_content}
-                    ]
-                )
+        report = response.choices[0].message.content
+        st.session_state.last_report = report
+        st.session_state.analysis_done = True
+        mark_key_as_used(st.session_state.current_key)
 
-                report = response.choices[0].message.content
-                st.session_state.last_report = report
-                mark_key_as_used(st.session_state.current_key)
-                st.session_state.analysis_done = True
-                st.markdown(report)
-                st.download_button("📥 Download PDF Report", create_pdf(report), "Lease_Report.pdf")
-                st.rerun()
+if st.session_state.analysis_done:
+    st.success("Analysis Complete")
+    st.markdown(st.session_state.last_report)
+    st.download_button(
+        "📥 Download PDF Report",
+        create_pdf(st.session_state.last_report),
+        "Lease_Report.pdf"
+    )
