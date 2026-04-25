@@ -3,6 +3,7 @@ from openai import OpenAI
 from PyPDF2 import PdfReader
 from fpdf import FPDF
 from supabase import create_client, Client
+from knowledge_base import JURISDICTIONS
 
 # MUST BE FIRST - Set to expanded to help with mobile visibility
 st.set_page_config(
@@ -200,11 +201,22 @@ if uploaded_file:
                 reader = PdfReader(uploaded_file)
                 text = " ".join([p.extract_text() for p in reader.pages if p.extract_text()])
 
+                # Build enhanced prompt
+                system_content = f"You are a legal expert specializing in rental agreements for {location}. "
+                if location in JURISDICTIONS:
+                    kb = JURISDICTIONS[location]
+                    system_content += f"Key statutes: {kb['statutes']}. Common red flags to check for: {', '.join(kb['red_flags'])}. Mandatory requirements to verify: {', '.join(kb['mandatory_checks'])}."
+                else:
+                    system_content += "Focus on compliance with local housing laws, fair housing practices, and tenant protections."
+
+                user_content = f"Please analyze the following lease agreement text for compliance with relevant 2026 laws and regulations. Identify any clauses that may be illegal, unfair, or non-compliant. Highlight red flags, missing mandatory elements, and provide recommendations for amendments or negotiations. Structure your report clearly with sections for Summary, Violations Found, Missing Requirements, and Suggestions.\n\nLease Text:\n{text}"
+
                 response = client.chat.completions.create(
                     model="gpt-4o",
+                    temperature=0,
                     messages=[
-                        {"role": "system", "content": f"Legal expert in {location}"},
-                        {"role": "user", "content": text}
+                        {"role": "system", "content": system_content},
+                        {"role": "user", "content": user_content}
                     ]
                 )
 
