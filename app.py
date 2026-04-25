@@ -14,48 +14,74 @@ st.set_page_config(
 )
 
 # --- EXECUTIVE UI OVERRIDE ---
-# --- EXECUTIVE UI OVERRIDE ---
 st.markdown("""
     <style>
-    /* 1. HIDE THE ENTIRE FOOTER CONTAINER */
-    footer {visibility: hidden !important;}
-    footer:after {
-        content:'Copyright © 2026 LegalLens'; 
-        visibility: visible;
-        display: block;
-        position: relative;
-        padding: 5px;
-        top: 2px;
-        color: #94a3b8;
+    
+    /* Hiding Streamlit Branding, GitHub, Share, and Status Badges */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stApp > footer {display: none !important;}
+    footer[data-testid="stFooter"] {display: none !important;}
+    .css-1lcbmhc {display: none !important;}  /* Common footer class */
+    .css-1q1n0ol {display: none !important;}  /* Another footer variant */
+
+    /* Removes the "Hosted with Streamlit" badge in bottom right */
+    .stAppDeployButton {display:none;}
+    [data-testid="stStatusWidget"] {visibility: hidden;}    
+    
+    [data-testid="stStatusWidget"] {
+        visibility: hidden;
+        display: none !important;
     }
-
-    /* 2. HIDE THE HEADER (GitHub icon, Deploy button, etc.) */
-    header {visibility: hidden !important;}
-
-    /* 3. TARGET SPECIFIC STREAMLIT TEST IDs */
-    [data-testid="stStatusWidget"] {display: none !important;}
-    [data-testid="stAppDeployButton"] {display: none !important;}
-    [data-testid="stToolbar"] {display: none !important;}
-
-    /* 4. HIDE THE "MANAGE APP" BOX ON CLOUD HOSTING */
-    #viewer-badge {display: none !important;}
+    
+    /* Removes the "Manage App" and other viewer-side elements */
+    #viewer-badge {display: none !important;}    
     .viewerBadge_container__1QSob {display: none !important;}
+    .viewerBadge_link__1S137 {display: none !important;}
+    
+    .stAppDeployButton {display:none;}
+    [data-testid="stStatusWidget"] {visibility: hidden;}
+    #viewer-badge {display: none !important;}
 
-    /* 5. FIXING OVERFLOW FROM HIDDEN HEADER */
-    .stApp {
-        margin-top: -50px;
-    }
-
-    /* YOUR EXISTING PROFESSIONAL STYLES */
+    /* Executive Font & Palette */
     html, body, [class*="css"] {
         font-family: "Verdana", sans-serif;
     }
-    div.stButton > button {
+
+    /* THE CARD LOOK FOR SIDEBAR EXPANDER */
+    div[data-testid="stExpander"] {
+        border-radius: 8px;
+    }
+
+    /* PROFESSIONAL SLATE BUTTONS */
+    div.stButton > button, 
+    div.stDownloadButton > button, 
+    label[data-testid="stFileUploaderPreSignUrl"] {
         background-color: #334155 !important;
         color: #ffffff !important;
+        border: 1px solid #475569 !important;
+        border-radius: 4px !important;
+        transition: all 0.2s ease-in-out !important;
+        width: 100% !important;
+        font-weight: 600 !important;
+        height: 3.2rem !important;
         text-transform: uppercase;
         letter-spacing: 1px;
     }
+
+    div.stButton > button:hover {
+        background-color: #475569 !important;
+        border-color: #94a3b8 !important;
+    }
+
+    h3 {
+        font-size: 1.4rem !important;
+        font-weight: 600 !important;
+        color: #f8fafc;
+    }
+    [class^="_profilePreview_"] {
+  display: none !important;
+}
     </style>
     """, unsafe_allow_html=True)
 
@@ -67,10 +93,8 @@ hide_st_style = """
 
     // Make the replacement
     document.addEventListener("DOMContentLoaded", function(event){
-        document.querySelectorAll('a[href="https://streamlit.io/cloud"]').forEach(el => el.remove());
+            streamlitDoc.getElementsByTagName("footer")[0].innerHTML = "Provided by <a href='https://yourwebsite.com' target='_blank' class='css-z3au9t egzxvld2'>Your Link Display Text Here</a>";
         });
-        
-    
     </script>
     """
 st.markdown(hide_st_style, unsafe_allow_html=True)
