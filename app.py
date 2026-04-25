@@ -186,7 +186,7 @@ if st.sidebar.button("Logout"):
     st.rerun()
 
 location = st.selectbox("Property Jurisdiction",
-                        ["Australia (VIC/NSW/QLD)", "New Zealand (RTA 2026)", "USA (NYC/CA/TX)", "Other"])
+                        ["New Zealand (RTA 2026)", "Australia (VIC/NSW/QLD)", "USA (NYC/CA/TX)", "Other"])
 
 uploaded_file = st.file_uploader("Upload Lease (PDF)", type="pdf")
 
