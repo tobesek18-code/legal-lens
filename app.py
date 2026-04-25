@@ -20,6 +20,10 @@ st.markdown("""
     /* Hiding Streamlit Branding, GitHub, Share, and Status Badges */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+    .stApp > footer {display: none !important;}
+    footer[data-testid="stFooter"] {display: none !important;}
+    .css-1lcbmhc {display: none !important;}  /* Common footer class */
+    .css-1q1n0ol {display: none !important;}  /* Another footer variant */
 
     /* Removes the "Hosted with Streamlit" badge in bottom right */
     .stAppDeployButton {display:none;}
@@ -32,6 +36,8 @@ st.markdown("""
     
     /* Removes the "Manage App" and other viewer-side elements */
     #viewer-badge {display: none !important;}    
+    .viewerBadge_container__1QSob {display: none !important;}
+    .viewerBadge_link__1S137 {display: none !important;}
     
     .stAppDeployButton {display:none;}
     [data-testid="stStatusWidget"] {visibility: hidden;}
