@@ -35,24 +35,20 @@ async def stripe_webhook(request: Request):
 
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
-        session_id = session["id"] # Unique ID for this specific transaction
+        session_id = session["id"]
         user_email = session["customer_details"]["email"]
 
-        # --- STEP 1: CHECK FOR DUPLICATES (Idempotency) ---
-        # Check if we have already processed this specific Stripe Session ID
+        # 1. Check for duplicate processing (Idempotency)
         existing_record = supabase.table("access_keys") \
             .select("*") \
             .eq("stripe_session_id", session_id) \
             .execute()
 
         if existing_record.data:
-            print(f"Session {session_id} already processed. Skipping.")
             return {"status": "already_processed"}
 
-        # --- STEP 2: GENERATE AND SAVE ---
+        # 2. Generate and store the unique key
         new_key = generate_key()
-
-        # Add 'stripe_session_id' to your Supabase table schema to track this
         supabase.table("access_keys").insert({
             "key": new_key,
             "is_used": False,
@@ -60,25 +56,27 @@ async def stripe_webhook(request: Request):
             "stripe_session_id": session_id
         }).execute()
 
-        # --- STEP 3: SEND CLEAN EMAIL ---
+        # 3. Send dynamic email via Resend
         try:
             resend.Emails.send({
                 "from": "LegalLens <contact@zartech.co.nz>",
-                "to": user_email, # Dynamic recipient
+                "to": user_email,
                 "subject": "🔑 Your LegalLens Access Key",
                 "html": f"""
                     <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
                         <h1 style="color: #333;">Welcome to LegalLens!</h1>
-                        <p>Your payment was successful. Use the key below to analyze your lease at <b>3a Bennett Road</b>:</p>
+                        <p>Your payment was successful. Use the access key below to begin your professional lease audit:</p>
                         <div style="background: #f4f4f4; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
                             <h2 style="color: #2e7d32; font-size: 32px; letter-spacing: 2px; margin: 0;">{new_key}</h2>
                         </div>
-                        <p style="color: #666; font-size: 14px;"><i>Note: This key is valid for a single analysis.</i></p>
+                        <p style="color: #666; font-size: 14px;">
+                            This key is valid for a <b>single analysis</b>. 
+                            To use it, go to the LegalLens app and enter this key in the sidebar.
+                        </p>
                     </div>
                 """
             })
         except Exception as e:
-            print(f"Error sending email: {e}")
-            # Note: You might want to handle email failure differently than DB failure
+            print(f"Resend error: {e}")
 
     return {"status": "success"}
