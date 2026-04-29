@@ -81,6 +81,14 @@ st.markdown("""
     [class^="_profilePreview_"] {
   display: none !important;
 }
+
+.video-container {
+        border: 2px solid #475569; /* Matches your button border color */
+        border-radius: 12px;
+        padding: 10px;
+        background-color: #1e293b; /* Slightly darker slate background */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -93,6 +101,20 @@ hide_st_style = """
     // Make the replacement
     document.addEventListener("DOMContentLoaded", function(event){
             streamlitDoc.getElementsByTagName("footer")[0].innerHTML = "Provided by <a href='https://yourwebsite.com' target='_blank' class='css-z3au9t egzxvld2'>Your Link Display Text Here</a>";
+        });
+        
+        const streamlitDoc = window.parent.document;
+
+    document.addEventListener("DOMContentLoaded", function(event){
+            // Existing footer replacement logic
+            streamlitDoc.getElementsByTagName("footer")[0].innerHTML = "Provided by <a href='https://yourwebsite.com' target='_blank'>LegalLens</a>";
+            
+            // Disable right-click on all video elements
+            const videos = streamlitDoc.getElementsByTagName("video");
+            for (let i = 0; i < videos.length; i++) {
+                videos[i].setAttribute("oncontextmenu", "return false;");
+                videos[i].setAttribute("controlsList", "nodownload");
+            }
         });
     </script>
     """
@@ -216,10 +238,24 @@ if not st.session_state.authenticated:
     with col2:
         st.write("**2. Secure Audit**")
         st.caption("Upload your PDF. AI scans for potential compliance issues based on 2026 regulations.")
+
     with col3:
         st.write("**3. Review Results**")
         st.caption("Download a detailed compliance report to review with your legal professional.")
+    st.write("")  # Extra spacing for breathing room
+    st.write("")  # Extra spacing for breathing room
 
+    v_col1, v_col2, v_col3 = st.columns([0.5, 3, 0.5])
+
+    with v_col2:
+        # Wrapping the video in a div with our new CSS class
+        st.markdown('<div class="video-container">', unsafe_allow_html=True)
+
+        video_file = open('LEGAL-LENS-DEMO.mov', 'rb')
+        video_bytes = video_file.read()
+        st.video(video_bytes)
+
+        st.markdown('</div>', unsafe_allow_html=True)
     st.divider()
 
     # Sidebar: Collapsable Access Control
@@ -231,7 +267,7 @@ if not st.session_state.authenticated:
 
             Key will be emailed immediately after payment.
         """)
-        st.sidebar.link_button("Buy Access Key 💳", st.secrets["STRIPE_PAYMENT_LINK"])
+        st.sidebar.link_button("Don't have a key? Get one here 💳", st.secrets["STRIPE_PAYMENT_LINK"])
 
     st.sidebar.divider()
 
