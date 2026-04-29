@@ -251,7 +251,7 @@ if not st.session_state.authenticated:
         # Wrapping the video in a div with our new CSS class
         st.markdown('<div class="video-container">', unsafe_allow_html=True)
 
-        video_file = open('LEGAL-LENS-DEMO.mp4', 'rb')
+        video_file = open('1.mp4', 'rb')
         video_bytes = video_file.read()
         st.video(video_bytes)
 
