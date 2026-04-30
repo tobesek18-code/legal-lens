@@ -89,6 +89,77 @@ st.markdown("""
         background-color: #1e293b; /* Slightly darker slate background */
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
+
+    /* Footer Styles */
+    .footer-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #1e293b;
+        border-top: 1px solid #334155;
+        padding: 10px 20px;
+        z-index: 1000;
+        
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 20px;
+    }
+
+    .footer-links a {
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+        color: #f8fafc;
+    }
+
+    .footer-copyright {
+        color: #64748b;
+        font-size: 0.8rem;
+    }
+
+    .footer-copyright a {
+        color: #94a3b8;
+        text-decoration: none;
+    }
+
+    .footer-copyright a:hover {
+        color: #f8fafc;
+    }
+
+    /* Ensure content doesn't get hidden behind footer */
+    .main .block-container {
+        padding-bottom: 120px;
+    }
+    
+    /* Footer fixed at bottom */
+    .footer-link-style {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #0f172a;
+        padding: 15px 20px;
+        text-align: center;
+        color: #64748b;
+        font-size: 0.75rem;
+        border-top: 1px solid #334155;
+        z-index: 999;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -128,9 +199,76 @@ supabase: Client = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABAS
 def create_pdf(report_text):
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
+
+    # Set up fonts - try Verdana first, fallback to Arial
+    try:
+        # Add Verdana font (matching website font)
+        pdf.add_font('Verdana', '', 'verdana.ttf', uni=True)
+        font_name = 'Verdana'
+    except:
+        # Fallback to Arial if Verdana not available
+        font_name = 'Arial'
+
+    # Header with logo and company info
+    pdf.set_fill_color(248, 250, 252)  # Light gray background like website
+    pdf.rect(0, 0, 210, 30, 'F')  # Header background
+
+    # Company logo
+    try:
+        pdf.image('logo.png', 10, 8, 20)
+    except:
+        pass  # Logo file not found, continue without it
+
+    # Company name and title
+    pdf.set_font(font_name, 'B', 14)
+    pdf.set_text_color(51, 65, 85)  # Dark slate color
+    pdf.set_xy(35, 10)
+    pdf.cell(0, 10, 'LegalLens AI - Compliance Report', 0, 1, 'L')
+
+    # Subtitle
+    pdf.set_font(font_name, '', 9)
+    pdf.set_text_color(100, 116, 139)  # Gray color
+    pdf.set_xy(35, 18)
+    pdf.cell(0, 6, 'AI-Powered Document Compliance Review', 0, 1, 'L')
+
+    # ...existing code...
+
+    # Main content
+    pdf.set_xy(10, 40)
+    pdf.set_font(font_name, '', 10)
+    pdf.set_text_color(51, 65, 85)  # Dark text
+
+    # Clean and format the text
     cleaned_text = report_text.encode('latin-1', 'ignore').decode('latin-1')
-    pdf.multi_cell(0, 10, txt=cleaned_text)
+
+    # Split text into lines and add proper formatting
+    lines = cleaned_text.split('\n')
+    for line in lines:
+        # Handle headers (lines starting with #)
+        if line.strip().startswith('#'):
+            pdf.set_font(font_name, 'B', 11)
+            pdf.set_text_color(30, 41, 59)  # Darker for headers
+            clean_line = line.strip('#').strip()
+        elif line.strip().startswith('-') or line.strip().startswith('•'):
+            pdf.set_font(font_name, '', 9)
+            pdf.set_text_color(51, 65, 85)
+            clean_line = '  ' + line.strip('-').strip('•').strip()
+        elif line.strip() == '':
+            clean_line = ''
+        else:
+            pdf.set_font(font_name, '', 10)
+            pdf.set_text_color(51, 65, 85)
+            clean_line = line
+
+        if clean_line:
+            # Check if we need a new page
+            if pdf.get_y() > 270:
+                pdf.add_page()
+                pdf.set_xy(10, 20)
+
+            pdf.multi_cell(0, 6, clean_line, 0, 'L')
+            pdf.ln(2)
+
     return pdf.output(dest='S').encode('latin-1')
 
 
@@ -214,10 +352,172 @@ Lease Agreement Text:
 """
 
 
+def render_footer():
+    """Render clean footer without internal divider"""
+    st.markdown("""
+    <div class="footer-link-style">
+        © 2026 LegalLens AI. All rights reserved. | 
+        <a href="?page=terms" target="_self" style="color: #94a3b8; text-decoration: none;">Terms</a> | 
+        <a href="?page=contact" target="_self" style="color: #94a3b8; text-decoration: none;">Contact</a> | 
+        <a href="?page=privacy" target="_self" style="color: #94a3b8; text-decoration: none;">Privacy</a> | 
+        <a href="?page=about" target="_self" style="color: #94a3b8; text-decoration: none;">About</a>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
-if not st.session_state.authenticated:
+if "current_page" not in st.session_state:
+    st.session_state.current_page = "home"
+
+# Handle query parameters for footer links
+try:
+    query_params = st.query_params
+    if "page" in query_params:
+        st.session_state.current_page = query_params["page"]
+except:
+    pass
+
+
+# --- PAGE ROUTING ---
+if st.session_state.current_page == "terms":
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col3:
+        if st.button("← Back Home"):
+            st.query_params.clear()  # This removes the ?page=... from the browser address bar
+            st.session_state.current_page = "home"
+            st.rerun()
+
+    st.write("### 📋 Terms & Conditions")
+    st.markdown("""
+    #### 1. Service Description
+    LegalLens AI provides **document review services only**. This is NOT a substitute for professional legal advice. 
+    Our AI analyzes rental agreements for potential compliance issues with local housing regulations.
+    
+    #### 2. User Responsibilities
+    - Users are solely responsible for reviewing AI findings with a qualified attorney
+    - Users must not rely on our analysis as legal advice
+    - Users acknowledge all compliance reviews are for informational purposes only
+    
+    #### 3. Liability Limitation
+    LegalLens AI shall not be liable for any damages, losses, or consequences arising from the use of our service.
+    Professional legal consultation is required for legal decisions.
+    
+    #### 4. Intellectual Property
+    All content, analysis methods, and reports are proprietary to LegalLens AI.
+    
+    #### 5. Modifications
+    We reserve the right to modify terms at any time. Continued use implies acceptance.
+    """)
+    render_footer()
+
+elif st.session_state.current_page == "contact":
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col3:
+        if st.button("← Back Home"):
+            st.query_params.clear()  # This removes the ?page=... from the browser address bar
+            st.session_state.current_page = "home"
+            st.rerun()
+
+    st.write("### 📧 Contact Us")
+    st.markdown("""
+    Have questions about LegalLens AI? We'd love to hear from you.
+    
+    **Email:** contact@zartech.co.nz
+    
+    **Hours:** Monday - Friday, 9AM - 5PM NZST
+    
+    **Response Time:** We typically respond within 24 hours.
+        
+    **For urgent legal matters:** Please contact a licensed attorney in your jurisdiction.
+    """)
+    render_footer()
+
+elif st.session_state.current_page == "privacy":
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col3:
+        if st.button("← Back Home"):
+            st.query_params.clear()  # This removes the ?page=... from the browser address bar
+            st.session_state.current_page = "home"
+            st.rerun()
+
+    st.write("### 🔒 Privacy Policy")
+    st.markdown("""
+    #### Data Collection
+    LegalLens AI collects:
+    - PDF documents you upload for analysis
+    - User email and access key information
+    - Usage analytics (non-personally identifiable)
+    
+    #### Data Usage
+    - Documents are used solely for AI analysis
+    - Data is NOT stored permanently after analysis
+    - We do NOT share your data with third parties
+    - All data transmission is encrypted (HTTPS)
+    
+    #### Data Retention
+    - Analysis results are deleted within 30 days
+    - Metadata may be retained for service improvement
+    - You can request data deletion at any time
+    
+    #### Security
+    We implement industry-standard security measures to protect your information.
+    
+    #### Your Rights
+    You have the right to:
+    - Access what data we hold about you
+    - Request deletion of your data
+    - Opt-out of analytics
+    """)
+    render_footer()
+
+elif st.session_state.current_page == "about":
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col3:
+        if st.button("← Back Home"):
+            st.query_params.clear()  # This removes the ?page=... from the browser address bar
+            st.session_state.current_page = "home"
+            st.rerun()
+
+    st.write("### ℹ️ About LegalLens AI")
+    st.markdown("""
+    #### Our Mission
+    LegalLens AI empowers renters and landlords with **AI-powered document analysis** to identify potential 
+    compliance issues in rental agreements before signing.
+    
+    #### What We Do
+    We review rental agreements for:
+    - Compliance with local housing regulations
+    - Missing mandatory clauses
+    - Unfair or risky terms
+    - Red flags and negotiation opportunities
+    
+    #### Important Disclaimer
+    ⚠️ **LegalLens AI is NOT a substitute for professional legal advice.**
+    
+    Our service provides **document review only**. Always consult with a licensed attorney in your 
+    jurisdiction before signing any legal document or making legal decisions.
+    
+    #### How We Analyze Documents
+    - AI scans for jurisdiction-specific compliance issues
+    - Generates detailed reports with severity ratings
+    - Provides negotiation suggestions
+    - Includes confidence levels for all findings
+    
+    #### Our Commitment
+    We believe renters deserve clarity and protection. Rental agreements can be complex, 
+    and our goal is to help you understand potential risks before it's too late.
+    
+    **Always seek professional legal advice for legal decisions.**
+    """)
+    render_footer()
+
+elif not st.session_state.authenticated:
+    # Display logo at top left
+
+
     st.write("### ⚖️ LegalLens: Real Estate AI")
     st.caption("AI-powered document compliance review for rental agreements.")
 
@@ -243,7 +543,6 @@ if not st.session_state.authenticated:
         st.write("**3. Review Results**")
         st.caption("Download a detailed compliance report to review with your legal professional.")
     st.write("")  # Extra spacing for breathing room
-    st.write("")  # Extra spacing for breathing room
 
     v_col1, v_col2, v_col3 = st.columns([0.5, 3, 0.5])
 
@@ -256,10 +555,6 @@ if not st.session_state.authenticated:
         st.video(video_bytes)
 
         st.markdown('</div>', unsafe_allow_html=True)
-    st.divider()
-
-    # Sidebar: Collapsable Access Control
-    st.sidebar.title("🔐 Access Portal")
 
     with st.sidebar.expander("💳 Professional Access", expanded=True):
         st.markdown("""
@@ -281,9 +576,14 @@ if not st.session_state.authenticated:
         else:
             st.sidebar.error(msg)
 
+    # Show footer on home page
+    render_footer()
     st.stop()
 
 # --- MAIN DASHBOARD (Visible ONLY after unlock) ---
+if not st.session_state.authenticated:
+    st.stop()
+
 if "analysis_done" not in st.session_state:
     st.session_state.analysis_done = False
 
@@ -298,7 +598,7 @@ location = st.selectbox(
 
 uploaded_file = st.file_uploader("Upload Lease (PDF)", type="pdf")
 
-if uploaded_file and st.button("Run AI Legal Audit"):
+if uploaded_file and not st.session_state.analysis_done and st.button("Run AI Legal Audit"):
     with st.spinner("Reviewing tenancy agreement..."):
         reader = PdfReader(uploaded_file)
         text = " ".join(
@@ -339,3 +639,7 @@ if st.session_state.analysis_done:
         create_pdf(st.session_state.last_report),
         "Lease_Report.pdf"
     )
+
+
+
+
