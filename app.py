@@ -534,7 +534,7 @@ elif not st.session_state.authenticated:
     # Display logo at top left
 
 
-    st.write("### ⚖️ LegalLens: Real Estate AI")
+    st.write("### ⚖️ LegalLens: Lease Review AI")
     st.caption("AI-powered document compliance review for rental agreements.")
 
     st.markdown("""
