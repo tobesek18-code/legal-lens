@@ -4,6 +4,7 @@ from PyPDF2 import PdfReader
 from fpdf import FPDF
 from supabase import create_client, Client
 from knowledge_base import JURISDICTIONS
+from streamlit_javascript import st_javascript
 
 st.set_page_config(
     page_title="LegalLens AI",
@@ -188,6 +189,21 @@ hide_st_style = """
             }
         });
     </script>
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1588599316608347');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1588599316608347&ev=PageView&noscript=1"
+/></noscript>
     """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 # Client Connections
