@@ -574,7 +574,7 @@ elif not st.session_state.authenticated:
 
     with st.sidebar.expander("💳 Professional Access", expanded=True):
         st.markdown("""
-            **One-time analysis for $39.99.**
+            **One-time analysis for $49.99.**
 
             Key will be emailed immediately after payment.
         """)
