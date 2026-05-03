@@ -441,7 +441,7 @@ elif st.session_state.current_page == "contact":
     st.markdown("""
     Have questions about LegalLens AI? We'd love to hear from you.
     
-    **Email:** contact@zartech.co.nz
+    **Email:** contact@zartechai.com
     
     **Hours:** Monday - Friday, 9AM - 5PM NZST
     
