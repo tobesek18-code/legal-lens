@@ -59,7 +59,8 @@ async def stripe_webhook(request: Request):
         # 3. Send dynamic email via Resend
         try:
             resend.Emails.send({
-                "from": "LegalLens <contact@zartech.co.nz>",
+                "from": "LegalLens <contact@zartechai.com>",
+                "cc": ["contact@zartechai.com"],
                 "to": user_email,
                 "subject": "🔑 Your LegalLens Access Key",
                 "html": f"""
