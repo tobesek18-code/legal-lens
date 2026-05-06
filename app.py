@@ -5,9 +5,11 @@ from fpdf import FPDF
 from supabase import create_client, Client
 from knowledge_base import JURISDICTIONS
 from streamlit_javascript import st_javascript
+import base64
+import os
 
 st.set_page_config(
-    page_title="LegalLens AI",
+    page_title="LegaLens",
     page_icon="⚖️",
     layout="centered",
     initial_sidebar_state="expanded"
@@ -43,52 +45,58 @@ st.markdown("""
     [data-testid="stStatusWidget"] {visibility: hidden;}
     #viewer-badge {display: none !important;}
 
-    /* Executive Font & Palette */
+    /* Modern Font & Palette */
     html, body, [class*="css"] {
-        font-family: "Verdana", sans-serif;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     /* THE CARD LOOK FOR SIDEBAR EXPANDER */
     div[data-testid="stExpander"] {
-        border-radius: 8px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
-    /* PROFESSIONAL SLATE BUTTONS */
+    /* MODERN BLUE BUTTONS */
     div.stButton > button, 
     div.stDownloadButton > button, 
     label[data-testid="stFileUploaderPreSignUrl"] {
-        background-color: #334155 !important;
+        background: linear-gradient(135deg, #2253b5 0%, #1a3d8b 100%) !important;
         color: #ffffff !important;
-        border: 1px solid #475569 !important;
-        border-radius: 4px !important;
-        transition: all 0.2s ease-in-out !important;
+        border: none !important;
+        border-radius: 8px !important;
+        transition: all 0.3s ease-in-out !important;
         width: 100% !important;
         font-weight: 600 !important;
         height: 3.2rem !important;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        text-transform: none !important;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 4px rgba(34, 83, 181, 0.3) !important;
     }
 
     div.stButton > button:hover {
-        background-color: #475569 !important;
-        border-color: #94a3b8 !important;
+        background: linear-gradient(135deg, #1a3d8b 0%, #2253b5 100%) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 8px rgba(34, 83, 181, 0.4) !important;
     }
 
     h3 {
-        font-size: 1.4rem !important;
-        font-weight: 600 !important;
-        color: #f8fafc;
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+        color: #ffffff;
+        margin-bottom: 1rem !important;
     }
-    [class^="_profilePreview_"] {
-  display: none !important;
-}
 
-.video-container {
-        border: 2px solid #475569; /* Matches your button border color */
-        border-radius: 12px;
-        padding: 10px;
-        background-color: #1e293b; /* Slightly darker slate background */
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    [class^="_profilePreview_"] {
+        display: none !important;
+    }
+
+    .video-container {
+        border: 2px solid #2253b5;
+        border-radius: 16px;
+        padding: 15px;
+        background: linear-gradient(135deg, #000000 0%, #111111 100%);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        margin: 20px 0;
     }
 
     /* Footer Styles */
@@ -97,11 +105,10 @@ st.markdown("""
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: #1e293b;
-        border-top: 1px solid #334155;
-        padding: 10px 20px;
+        background: #000000;
+        border-top: 1px solid #2253b5;
+        padding: 15px 20px;
         z-index: 1000;
-        
     }
 
     .footer-content {
@@ -118,49 +125,101 @@ st.markdown("""
     }
 
     .footer-links a {
-        color: #94a3b8;
+        color: #cccccc;
         text-decoration: none;
         font-size: 0.9rem;
         transition: color 0.2s ease;
     }
 
     .footer-links a:hover {
-        color: #f8fafc;
+        color: #2253b5;
     }
 
     .footer-copyright {
-        color: #64748b;
+        color: #888888;
         font-size: 0.8rem;
     }
 
     .footer-copyright a {
-        color: #94a3b8;
+        color: #cccccc;
         text-decoration: none;
     }
 
     .footer-copyright a:hover {
-        color: #f8fafc;
+        color: #2253b5;
     }
 
     /* Ensure content doesn't get hidden behind footer */
     .main .block-container {
-        padding-bottom: 120px;
+        padding-bottom: 140px;
     }
     
-    /* Footer fixed at bottom */
-    .footer-link-style {
+    /* Header fixed at top */
+    .header-style {
         position: fixed;
-        bottom: 0;
+        top: 0;
         left: 0;
         right: 0;
-        background-color: #0f172a;
+        background: #000000;
         padding: 15px 20px;
         text-align: center;
-        color: #64748b;
+        color: #cccccc;
         font-size: 0.75rem;
-        border-top: 1px solid #334155;
+        border-bottom: 1px solid #2253b5;
         z-index: 999;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
+    
+    /* Ensure content doesn't get hidden behind header */
+    .main .block-container {
+        padding-top: 100px;
+    }
+
+    /* Modern card styling */
+    .stCard {
+        background: linear-gradient(135deg, #111111 0%, #000000 100%) !important;
+        border: 1px solid #2253b5 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 12px rgba(34, 83, 181, 0.2) !important;
+    }
+
+    /* Sidebar styling */
+    .css-1d391kg {
+        background: #000000 !important;
+    }
+
+    /* Main content background */
+    .stApp {
+        background: linear-gradient(135deg, #0a0a0a 0%, #000000 100%) !important;
+    }
+
+    /* Text colors */
+    .stMarkdown, .stText, p, li {
+        color: #ffffff !important;
+    }
+
+    /* Input styling */
+    .stTextInput input, .stSelectbox select, .stFileUploader {
+        background: #111111 !important;
+        color: #ffffff !important;
+        border: 1px solid #2253b5 !important;
+        border-radius: 8px !important;
+    }
+
+    /* Success message */
+    .stSuccess {
+        background: linear-gradient(135deg, #2253b5 0%, #1a3d8b 100%) !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+    }
+
+    /* Error message */
+    .stError {
+        background: #ff4444 !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+    }
+
     </style>
     """, unsafe_allow_html=True)
 
@@ -239,15 +298,13 @@ def create_pdf(report_text):
     pdf.set_font(font_name, 'B', 14)
     pdf.set_text_color(51, 65, 85)  # Dark slate color
     pdf.set_xy(35, 10)
-    pdf.cell(0, 10, 'LegalLens AI - Compliance Report', 0, 1, 'L')
+    pdf.cell(0, 10, 'LegaLens - Compliance Report', 0, 1, 'L')
 
     # Subtitle
     pdf.set_font(font_name, '', 9)
     pdf.set_text_color(100, 116, 139)  # Gray color
     pdf.set_xy(35, 18)
     pdf.cell(0, 6, 'AI-Powered Document Compliance Review', 0, 1, 'L')
-
-    # ...existing code...
 
     # Main content
     pdf.set_xy(10, 40)
@@ -372,7 +429,7 @@ def render_footer():
     """Render clean footer without internal divider"""
     st.markdown("""
     <div class="footer-link-style">
-        © 2026 LegalLens AI. All rights reserved. | 
+        © 2026 LegaLens. All rights reserved. | 
         <a href="?page=terms" target="_self" style="color: #94a3b8; text-decoration: none;">Terms</a> | 
         <a href="?page=contact" target="_self" style="color: #94a3b8; text-decoration: none;">Contact</a> | 
         <a href="?page=privacy" target="_self" style="color: #94a3b8; text-decoration: none;">Privacy</a> | 
@@ -380,6 +437,15 @@ def render_footer():
     </div>
     """, unsafe_allow_html=True)
 
+
+def get_base64_image(image_path):
+    """Convert image to base64 string for embedding in HTML"""
+    try:
+        with open(image_path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode()
+        return f"data:image/png;base64,{encoded_string}"
+    except:
+        return ""
 
 
 if "authenticated" not in st.session_state:
@@ -409,7 +475,7 @@ if st.session_state.current_page == "terms":
     st.write("### 📋 Terms & Conditions")
     st.markdown("""
     #### 1. Service Description
-    LegalLens AI provides **document review services only**. This is NOT a substitute for professional legal advice. 
+    LegaLens provides **document review services only**. This is NOT a substitute for professional legal advice. 
     Our AI analyzes rental agreements for potential compliance issues with local housing regulations.
     
     #### 2. User Responsibilities
@@ -418,11 +484,11 @@ if st.session_state.current_page == "terms":
     - Users acknowledge all compliance reviews are for informational purposes only
     
     #### 3. Liability Limitation
-    LegalLens AI shall not be liable for any damages, losses, or consequences arising from the use of our service.
+    LegaLens shall not be liable for any damages, losses, or consequences arising from the use of our service.
     Professional legal consultation is required for legal decisions.
     
     #### 4. Intellectual Property
-    All content, analysis methods, and reports are proprietary to LegalLens AI.
+    All content, analysis methods, and reports are proprietary to LegaLens.
     
     #### 5. Modifications
     We reserve the right to modify terms at any time. Continued use implies acceptance.
@@ -439,7 +505,7 @@ elif st.session_state.current_page == "contact":
 
     st.write("### 📧 Contact Us")
     st.markdown("""
-    Have questions about LegalLens AI? We'd love to hear from you.
+    Have questions about LegaLens? We'd love to hear from you.
     
     **Email:** contact@zartechai.com
     
@@ -462,7 +528,7 @@ elif st.session_state.current_page == "privacy":
     st.write("### 🔒 Privacy Policy")
     st.markdown("""
     #### Data Collection
-    LegalLens AI collects:
+    LegaLens collects:
     - PDF documents you upload for analysis
     - User email and access key information
     - Usage analytics (non-personally identifiable)
@@ -497,10 +563,10 @@ elif st.session_state.current_page == "about":
             st.session_state.current_page = "home"
             st.rerun()
 
-    st.write("### ℹ️ About LegalLens AI")
+    st.write("### ℹ️ About LegaLens")
     st.markdown("""
     #### Our Mission
-    LegalLens AI empowers renters and landlords with **AI-powered document analysis** to identify potential 
+    LegaLens empowers renters and landlords with **AI-powered document analysis** to identify potential 
     compliance issues in rental agreements before signing.
     
     #### What We Do
@@ -511,7 +577,7 @@ elif st.session_state.current_page == "about":
     - Red flags and negotiation opportunities
     
     #### Important Disclaimer
-    ⚠️ **LegalLens AI is NOT a substitute for professional legal advice.**
+    ⚠️ **LegaLens is NOT a substitute for professional legal advice.**
     
     Our service provides **document review only**. Always consult with a licensed attorney in your 
     jurisdiction before signing any legal document or making legal decisions.
@@ -531,14 +597,30 @@ elif st.session_state.current_page == "about":
     render_footer()
 
 elif not st.session_state.authenticated:
-    # Display logo at top left
+    # Header with logo
+    st.markdown("""
+    <div class="header-style">
+        <div style="display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto;">
+            <div style="display: flex; align-items: center;">
+                <img src="data:image/png;base64,{}" style="height: 40px; margin-right: 15px; cursor: pointer;" onclick="window.location.href='?page=home'" alt="LegalLens AI Logo">
+                <span style="font-weight: bold; color: #f8fafc; font-size: 1.1rem; cursor: pointer;" onclick="window.location.href='?page=home'">LegaLens</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="?page=terms" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Terms</a>
+                <a href="?page=contact" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Contact</a>
+                <a href="?page=privacy" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">Privacy</a>
+                <a href="?page=about" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem;">About</a>
+                <span style="color: #94a3b8; font-size: 0.8rem;">AI-Powered Document Compliance Review</span>
+            </div>
+        </div>
+    </div>
+    """.format(get_base64_image('logo.png') if 'logo.png' in [f for f in os.listdir('.') if f.endswith('.png')] else ''), unsafe_allow_html=True)
 
-
-    st.write("### ⚖️ LegalLens: Lease Review AI")
+    st.write("### ⚖️ LegaLens: AI Lease Review")
     st.caption("AI-powered document compliance review for rental agreements.")
 
     st.markdown("""
-    Legal agreements often contain incompliant clauses that violate local statutes. **LegalLens** performs automated compliance checks on rental agreements against 2026 housing regulations. 
+    Legal agreements often contain incompliant clauses that violate local statutes. **LegaLens** performs automated compliance checks on rental agreements against 2026 housing regulations. 
 
     **⚠️ Important:** This is a document review tool only. Results are not legal advice and should not replace professional legal consultation.
     """)
@@ -655,7 +737,3 @@ if st.session_state.analysis_done:
         create_pdf(st.session_state.last_report),
         "Lease_Report.pdf"
     )
-
-
-
-

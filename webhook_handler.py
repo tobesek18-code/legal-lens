@@ -65,14 +65,14 @@ async def stripe_webhook(request: Request):
                 "subject": "🔑 Your LegalLens Access Key",
                 "html": f"""
                     <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
-                        <h1 style="color: #333;">Welcome to LegalLens!</h1>
+                        <h1 style="color: #2253b5;">Welcome to LegaLens!</h1>
                         <p>Your payment was successful. Use the access key below to begin your professional lease audit:</p>
-                        <div style="background: #f4f4f4; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
-                            <h2 style="color: #2e7d32; font-size: 32px; letter-spacing: 2px; margin: 0;">{new_key}</h2>
+                        <div style="background: linear-gradient(135deg, #2253b5 0%, #1a3d8b 100%); padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
+                            <h2 style="color: #ffffff; font-size: 32px; letter-spacing: 2px; margin: 0;">{new_key}</h2>
                         </div>
                         <p style="color: #666; font-size: 14px;">
                             This key is valid for a <b>single analysis</b>. 
-                            To use it, go to the LegalLens app and enter this key in the sidebar.
+                            To use it, go to the LegaLens app and enter this key in the sidebar.
                         </p>
                     </div>
                 """
