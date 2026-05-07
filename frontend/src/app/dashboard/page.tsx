@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FileText, Download, LogOut, Upload, AlertCircle, CheckCircle } from 'lucide-react';
+import AnalysisReport from '@/components/AnalysisReport';
 import { analysisAPI } from '@/utils/api';
 
 export default function Dashboard() {
@@ -12,6 +13,7 @@ export default function Dashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
   const [error, setError] = useState('');
+  const [pdfGenerated, setPdfGenerated] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -55,6 +57,7 @@ export default function Dashboard() {
     setIsAnalyzing(true);
     setError('');
     setAnalysisResult(null);
+    setPdfGenerated(false);
 
     try {
       const response = await analysisAPI.analyzeDocument(selectedJurisdiction, uploadedFile);
@@ -79,6 +82,7 @@ export default function Dashboard() {
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
+      setPdfGenerated(true);
     } catch (err) {
       setError('Failed to generate PDF. Please try again.');
     }
@@ -92,19 +96,30 @@ export default function Dashboard() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-black mb-2">📑 Analysis Dashboard</h1>
-          <p className="text-gray-600">Upload your lease agreement for AI-powered compliance review</p>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-        >
-          <LogOut className="w-4 h-4" />
-          Logout
-        </button>
+
+      <div className="flex justify-between items-center gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-black mb-2">
+              📑 Analysis Dashboard
+            </h1>
+
+            <p className="text-gray-600 text-sm font-medium text-black mb-3">
+              Upload your lease agreement for AI-powered compliance review
+            </p>
+          </div>
+
+          <div>
+            <button
+              onClick={handleLogout}
+              className="btn-custom bg-red-600 hover:bg-red-700"
+            >
+              <LogOut />
+              Logouts
+            </button>
+          </div>
       </div>
+
+
 
       {/* Jurisdiction Selection */}
       <div className="card mb-6">
@@ -130,7 +145,7 @@ export default function Dashboard() {
         <label className="block text-sm font-medium text-black mb-3">
           Upload Lease Agreement (PDF)
         </label>
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-colors">
+        <div className="border-2 border-dashed border-gray-300 rounded-xl p-10 text-center hover:border-primary hover:bg-blue-50/30 transition-all duration-200 cursor-pointer">
           <input
             type="file"
             accept=".pdf"
@@ -150,58 +165,56 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Error Display */}
-      {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <div className="flex items-center">
-            <AlertCircle className="w-5 h-5 text-red-500 mr-2" />
-            <p className="text-red-700">{error}</p>
-          </div>
-        </div>
-      )}
 
-      {/* Analysis Button */}
-      <div className="mb-8">
-        <button
-          onClick={handleAnalysis}
-          disabled={!uploadedFile || !selectedJurisdiction || isAnalyzing}
-          className="btn-primary w-full"
-        >
-          {isAnalyzing ? (
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-              Reviewing tenancy agreement...
-            </div>
-          ) : (
-            <>
-              <FileText className="w-5 h-5 mr-2" />
-              Run AI Legal Audit
-            </>
-          )}
-        </button>
-      </div>
+       {/* Analysis Button */}
+       {!pdfGenerated && (
+         <div className="mb-8">
+           <button className="btn-primary w-full py-3 text-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200" className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 shadow-sm"
+             onClick={handleAnalysis}
+             disabled={!uploadedFile || !selectedJurisdiction || isAnalyzing}
+             className="btn-primary w-full"
+           >
+             {isAnalyzing ? (
+               <div className="flex items-center justify-center">
+                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                 Reviewing tenancy agreement...
+               </div>
+             ) : (
+               <>
+                 <FileText  className="w-5 h-5 mr-2" />
+                 Run AI Legal Audit
+               </>
+             )}
+           </button>
+         </div>
+       )}
 
       {/* Analysis Results */}
       {analysisResult && (
         <div className="card">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center">
-              <CheckCircle className="w-6 h-6 text-green-500 mr-2" />
-              <h2 className="text-xl font-bold text-black">Analysis Complete</h2>
-            </div>
+
+        <div className="flex justify-between items-center gap-4 mb-8">
+          <div className="flex items-center gap-4">
+            <CheckCircle className="w-6 h-6 text-green-500" />
+            <h2 className="text-xl font-bold text-black">
+              Analysis Complete
+            </h2>
+          </div>
+
+          <div className="flex items-center">
             <button
               onClick={handleDownloadPDF}
-              className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors"
+              className="btn-primary flex items-center gap-2"
             >
               <Download className="w-4 h-4" />
               Download PDF Report
             </button>
           </div>
+        </div>
 
-          <div className="bg-gray-50 rounded-lg p-6 max-h-96 overflow-y-auto border">
-            <pre className="text-black whitespace-pre-wrap font-sans text-sm leading-relaxed">
-              {analysisResult}
-            </pre>
+
+          <div className="max-h-96 overflow-y-auto">
+            <AnalysisReport report={analysisResult} />
           </div>
         </div>
       )}

@@ -32,14 +32,14 @@ export default function AuthSection({ onAuthSuccess }: AuthSectionProps) {
   };
 
   return (
-    <div className="mb-12">
-      <div className="card max-w-md mx-auto">
+    <div className="mb-16">
+      <div className="card max-w-md mx-auto shadow-xl">
         <div className="flex items-center justify-center mb-6">
           <Lock className="w-8 h-8 text-primary mr-3" />
           <h2 className="text-2xl font-bold text-black">Professional Access</h2>
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6" style={{ padding: '10px' }}>
           <p className="text-black font-medium text-center">
             One-time analysis for $49.99 USD
           </p>
@@ -64,7 +64,6 @@ export default function AuthSection({ onAuthSuccess }: AuthSectionProps) {
                 Enter Access Key
               </label>
               <div className="relative">
-                <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="password"
                   id="accessKey"
@@ -78,7 +77,7 @@ export default function AuthSection({ onAuthSuccess }: AuthSectionProps) {
             </div>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <div className="mb-6 p-4 ml-10 bg-red-50 border border-red-200 rounded-lg shadow-sm">
                 <div className="flex items-center">
                   <AlertCircle className="w-5 h-5 text-red-500 mr-2" />
                   <p className="text-red-700 text-sm">{error}</p>
