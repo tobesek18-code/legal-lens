@@ -34,7 +34,7 @@ export default function Home() {
         <div className="w-full max-w-4xl flex flex-col items-center text-center gap-6 mb-12">
           {/* Title */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-primary to-primary-dark bg-clip-text text-transparent">
-            ⚖️ LeaseGuard Pro
+            ⚖️ LegalLens
           </h1>
 
           {/* Subtitle */}
@@ -45,7 +45,7 @@ export default function Home() {
           {/* Description Paragraph */}
           <p className="text-base md:text-lg text-accent max-w-3xl leading-relaxed mt-2">
             Legal agreements often contain non-compliant clauses that violate local statutes.
-            <strong className="text-foreground font-semibold"> LeaseGuard Pro</strong> performs automated compliance checks on rental agreements against current housing regulations.
+            <strong className="text-foreground font-semibold"> LegalLens</strong> performs automated compliance checks on rental agreements against current housing regulations.
           </p>
 
           {/* Disclaimer Box */}
@@ -57,7 +57,10 @@ export default function Home() {
         </div>
 
         {/* How It Works */}
-        <div className="mb-12 w-full">
+        <div className="mb-12 mt-2.5 w-full" style={{
+    marginTop: '15px',
+  }}
+>
           <h2 className="text-3xl font-bold text-center mb-8 text-black">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="card text-center hover:shadow-lg transition-shadow">
@@ -98,7 +101,7 @@ export default function Home() {
 
         {/* Features */}
         <div className="mb-12 w-full">
-          <h2 className="text-3xl font-bold text-center mb-8 text-black">Why Choose LeaseGuard Pro?</h2>
+          <h2 className="text-3xl font-bold text-center mb-8 text-black">Why Choose LegalLens?</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="card text-center hover:shadow-lg transition-shadow">
               <Shield className="w-12 h-12 text-primary mx-auto mb-4" />

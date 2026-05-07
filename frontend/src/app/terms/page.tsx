@@ -25,23 +25,41 @@ export default function TermsPage() {
       setTitle('Terms & Conditions');
       setContent(`
 #### 1. Service Description
-LegaLens provides **document review services only**. This is NOT a substitute for professional legal advice.
-Our AI analyzes rental agreements for potential compliance issues with local housing regulations.
+<p className="text-gray-700 leading-relaxed; text-left">
+  LegaLens provides{" "}
+  <span className="font-semibold">document review services only</span>.
+  This is NOT a substitute for professional legal advice. Our AI analyzes
+  rental agreements for potential compliance issues with local housing regulations.
+</p>
 
-#### 2. User Responsibilities
-- Users are solely responsible for reviewing AI findings with a qualified attorney
-- Users must not rely on our analysis as legal advice
-- Users acknowledge all compliance reviews are for informational purposes only
+<h4 className="font-semibold mt-6 mb-2">2. User Responsibilities</h4>
+<ul className="list-disc pl-6 space-y-1 text-gray-700">
+  <li>
+    Users are solely responsible for reviewing AI findings with a qualified attorney
+  </li>
+  <li>
+    Users must not rely on our analysis as legal advice
+  </li>
+  <li>
+    Users acknowledge all compliance reviews are for informational purposes only
+  </li>
+</ul>
 
-#### 3. Liability Limitation
-LegaLens shall not be liable for any damages, losses, or consequences arising from the use of our service.
-Professional legal consultation is required for legal decisions.
+<h4 className="font-semibold mt-6 mb-2">3. Liability Limitation</h4>
+<p className="text-gray-700 leading-relaxed">
+  LegaLens shall not be liable for any damages, losses, or consequences arising
+  from the use of our service. Professional legal consultation is required for legal decisions.
+</p>
 
-#### 4. Intellectual Property
-All content, analysis methods, and reports are proprietary to LegaLens.
+<h4 className="font-semibold mt-6 mb-2">4. Intellectual Property</h4>
+<p className="text-gray-700 leading-relaxed">
+  All content, analysis methods, and reports are proprietary to LegaLens.
+</p>
 
-#### 5. Modifications
-We reserve the right to modify terms at any time. Continued use implies acceptance.
+<h4 className="font-semibold mt-6 mb-2">5. Modifications</h4>
+<p className="text-gray-700 leading-relaxed">
+  We reserve the right to modify terms at any time. Continued use implies acceptance.
+</p>
       `);
     } finally {
       setLoading(false);

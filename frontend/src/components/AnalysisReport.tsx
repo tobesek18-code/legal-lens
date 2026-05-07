@@ -15,7 +15,7 @@ export default function AnalysisReport({ report }: AnalysisReportProps) {
         const colorClass = type === 'success' ? 'text-green-600' : type === 'warning' ? 'text-yellow-600' : type === 'error' ? 'text-red-600' : 'text-blue-600';
         const bgClass = type === 'success' ? 'bg-green-50 border-green-200' : type === 'warning' ? 'bg-yellow-50 border-yellow-200' : type === 'error' ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200';
         sections.push(
-          <div key={title} className={`mb-6 p-6 rounded-lg border ${bgClass}`} style={{ padding: '10px' }}>
+          <div key={title} className={`mb-6 p-6 rounded-lg border ${bgClass}`} style={{ padding: '10px', clear: 'both', marginBottom: '20px', text_align: 'left' }}>
             <div className="flex items-center mb-4">
               <IconComponent className={`w-6 h-6 ${colorClass} mr-3`} />
               <h3 className="text-xl font-semibold text-gray-900">{title}</h3>

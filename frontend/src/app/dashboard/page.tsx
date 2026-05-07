@@ -167,7 +167,7 @@ export default function Dashboard() {
 
 
        {/* Analysis Button */}
-       {!pdfGenerated && (
+       {!analysisResult && (
          <div className="mb-8">
            <button className="btn-primary w-full py-3 text-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200" className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 shadow-sm"
              onClick={handleAnalysis}
