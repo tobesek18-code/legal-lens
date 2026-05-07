@@ -1,0 +1,49 @@
+name: leaseguard-pro
+services:
+  - name: backend
+    github:
+      repo: tobesek18-code/legal-lens
+      branch: main
+    source_dir: backend
+    build_command: pip install -r requirements.txt
+    run_command: gunicorn -w 4 -b 0.0.0.0:8080 main:app
+    envs:
+      - key: STRIPE_SECRET_KEY
+        scope: RUN_AND_BUILD_TIME
+        value: ${STRIPE_SECRET_KEY}
+      - key: STRIPE_WEBHOOK_SECRET
+        scope: RUN_AND_BUILD_TIME
+        value: ${STRIPE_WEBHOOK_SECRET}
+      - key: RESEND_API_KEY
+        scope: RUN_AND_BUILD_TIME
+        value: ${RESEND_API_KEY}
+      - key: OPENAI_API_KEY
+        scope: RUN_AND_BUILD_TIME
+        value: ${OPENAI_API_KEY}
+      - key: SUPABASE_URL
+        scope: RUN_AND_BUILD_TIME
+        value: ${SUPABASE_URL}
+      - key: SUPABASE_KEY
+        scope: RUN_AND_BUILD_TIME
+        value: ${SUPABASE_KEY}
+      - key: FLASK_ENV
+        scope: RUN_TIME
+        value: production
+    http_port: 8080
+
+  - name: frontend
+    github:
+      repo: tobesek18-code/legal-lens
+      branch: main
+    source_dir: frontend
+    build_command: npm install && npm run build
+    run_command: npm start
+    envs:
+      - key: NEXT_PUBLIC_API_URL
+        scope: RUN_AND_BUILD_TIME
+        value: ${backend.HOSTNAME}
+    http_port: 3000
+
+static_sites:
+  - name: docs
+    source_dir: frontend/.next/static
