@@ -3,7 +3,7 @@ services:
   - name: backend
     github:
       repo: tobesek18-code/legal-lens
-      branch: main
+      branch: next
     source_dir: backend
     build_command: pip install -r requirements.txt
     run_command: gunicorn -w 4 -b 0.0.0.0:8080 main:app
