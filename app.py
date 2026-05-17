@@ -550,7 +550,7 @@ elif not st.session_state.authenticated:
     col1, col2, col3 = st.columns(3)
     with col1:
         st.write("**1. Get Your Key**")
-        st.caption("Purchase a key via Stripe. It is emailed to you instantly.")
+        st.caption("Purchase a key via Stripe and receive it instantly by email. If you don’t see the “Buy” button in the left sidebar, click “>>” in the top-left corner.")
     with col2:
         st.write("**2. Secure Audit**")
         st.caption("Upload your PDF. AI scans for potential compliance issues based on 2026 regulations.")
