@@ -56,6 +56,7 @@ st.markdown("""
     /* PROFESSIONAL SLATE BUTTONS */
     div.stButton > button, 
     div.stDownloadButton > button, 
+    div.stLinkButton > a,    
     label[data-testid="stFileUploaderPreSignUrl"] {
         background-color: #334155 !important;
         color: #ffffff !important;
@@ -578,7 +579,7 @@ elif not st.session_state.authenticated:
 
             Key will be emailed immediately after payment.
         """)
-        st.sidebar.link_button("Don't have a key? Get one here 💳", st.secrets["STRIPE_PAYMENT_LINK"])
+        st.sidebar.link_button("Click to get a key 💳", st.secrets["STRIPE_PAYMENT_LINK"])
 
     st.sidebar.divider()
 
