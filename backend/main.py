@@ -42,7 +42,12 @@ app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"])
 
 # Security
-SECRET_KEY = secrets.token_urlsafe(32)
+# Load from env so tokens survive restarts and work across multiple workers.
+SECRET_KEY = os.getenv("JWT_SECRET")
+if not SECRET_KEY:
+    SECRET_KEY = secrets.token_urlsafe(32)
+    print("⚠️  Warning: JWT_SECRET not set. Using a random key; "
+          "tokens will be invalidated on every restart.")
 ALGORITHM = "HS256"
 
 
@@ -72,7 +77,7 @@ def verify_token():
         return access_key
     except jwt.ExpiredSignatureError:
         return None
-    except jwt.JWTError:
+    except jwt.InvalidTokenError:
         return None
 
 
@@ -517,4 +522,7 @@ def stripe_webhook():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    # Debug mode exposes an interactive debugger; keep it off unless explicitly enabled.
+    debug_mode = os.getenv("FLASK_DEBUG", "0") == "1"
+    host = "127.0.0.1" if debug_mode else "0.0.0.0"
+    app.run(host=host, port=8000, debug=debug_mode)

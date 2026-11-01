@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZarTechAI | The Voice AI Infrastructure for Developers</title>
+    <!-- Google Sans / Inter Style Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Verdana&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS for modern sleek styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0B0F19',
+                            card: '#161B26',
+                            accent: '#38BDF8',
+                            muted: '#94A3B8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Verdana', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0B0F19;
+            color: #F8FAFC;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #FFF 0%, #38BDF8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow-effect {
+            box-shadow: 0 0 50px -10px rgba(56, 189, 248, 0.15);
+        }
+        .tab-btn.active {
+            border-color: #38BDF8;
+            color: #38BDF8;
+            background: rgba(56, 189, 248, 0.05);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-sky-500/30 selection:text-sky-200">
+
+    <!-- Navigation Header -->
+    <header class="border-b border-gray-800 sticky top-0 bg-brand-dark/80 backdrop-blur-md z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="h-9 w-9 bg-gradient-to-tr from-sky-500 to-indigo-600 rounded-lg flex items-center justify-center font-bold text-white tracking-wider glow-effect">
+                    Z
+                </div>
+                <span class="text-xl font-semibold tracking-tight text-white">ZarTech<span class="text-brand-accent">AI</span></span>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-brand-muted">
+                <a href="#features" class="hover:text-white transition">Features</a>
+                <a href="#docs" class="hover:text-white transition">Documentation</a>
+                <a href="#deployment" class="hover:text-white transition">Deployment</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a href="#docs" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition border border-gray-700">Documentation</a>
+                <a href="#deployment" class="bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 text-brand-dark px-4 py-2 rounded-lg text-sm font-semibold transition tracking-tight shadow-md shadow-sky-500/10">Deploy Now</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace Hero -->
+    <main class="relative overflow-hidden pt-16 pb-24">
+        <!-- Ambient Backlight background -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-gradient-to-b from-sky-500/10 to-transparent blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-xs font-medium text-sky-400 mb-6">
+                <span class="flex h-2 w-2 rounded-full bg-sky-400 animate-pulse"></span>
+                Production-Ready Voice AI Agent Architecture
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-bold tracking-tight mb-6 leading-[1.15]">
+                Build and Run <br><span class="gradient-text">Real-Time Voice AI Agents</span>
+            </h1>
+            <p class="text-lg sm:text-xl text-brand-muted max-w-2xl mx-auto mb-10 font-normal">
+                ZarTechAI provides the underlying low-latency websocket pipeline, LLM orchestration, and telemetry interfaces required to build elite hyper-realistic conversation agents.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16">
+                <a href="#deployment" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-sky-500 to-sky-600 text-brand-dark rounded-xl font-semibold shadow-xl shadow-sky-500/20 hover:scale-[1.02] transition duration-200">
+                    Get Started Instantly
+                </a>
+                <a href="#docs" class="w-full sm:w-auto px-8 py-4 bg-brand-card hover:bg-gray-800 border border-gray-800 text-white rounded-xl font-medium transition duration-200">
+                    View Local Framework
+                </a>
+            </div>
+
+            <!-- Dynamic Live Terminal Playground Preview -->
+            <div class="bg-brand-card rounded-xl border border-gray-800 text-left glow-effect max-w-4xl mx-auto overflow-hidden shadow-2xl">
+                <div class="bg-gray-950 px-4 py-3 border-b border-gray-800 flex items-center justify-between">
+                    <div class="flex space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500/70"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500/70"></div>
+                    </div>
+                    <div class="text-xs text-brand-muted font-mono font-medium">zartech_agent_pipeline.py</div>
+                    <div class="w-4"></div>
+                </div>
+                <div class="p-6 font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto text-gray-300">
+                    <p class="text-gray-500"># Dynamic Real-time Streaming Architecture via ZarTechAI Framework</p>
+                    <p><span class="text-sky-400">from</span> zartech_ai <span class="text-sky-400">import</span> ZarTechVoiceAgent, PipelineConfig</p>
+                    <p><span class="text-sky-400">import</span> streamlit <span class="text-sky-400">as</span> st</p>
+                    <br>
+                    <p>config = PipelineConfig(</p>
+                    <p class="pl-6">voice_engine=<span class="text-emerald-400">"zartech-ultra-expressive"</span>,</p>
+                    <p class="pl-6">llm_backbone=<span class="text-emerald-400">"llalens-v3-executive"</span>,</p>
+                    <p class="pl-6">max_interruptibility_threshold=<span class="text-amber-400">120</span> <span class="text-gray-500"># ms latency</span></p>
+                    <p>)</p>
+                    <br>
+                    <p>agent = ZarTechVoiceAgent(configuration=config)</p>
+                    <p>agent.initialize_websocket_stream(port=<span class="text-amber-400">8000</span>)</p>
+                    <p class="text-emerald-400 mt-2">>> [INFO] ZarTechAI Pipeline operational. High-Fidelity Audio Stream Ready.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Visual Divider -->
+    <div class="border-t border-gray-900"></div>
+
+    <!-- Product Application Architecture Presentation Section -->
+    <section id="features" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2 class="text-3xl font-bold tracking-tight mb-4">Engineered for Sub-100ms Conversational Execution</h2>
+            <p class="text-brand-muted">Stop stitching together APIs. ZarTechAI coordinates ingestion, processing, transcription, reasoning, and synthesis seamlessly.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-brand-card/50 border border-gray-800 p-8 rounded-xl hover:border-gray-700 transition">
+                <div class="h-10 w-10 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400 font-bold mb-6">🎙️</div>
+                <h3 class="text-lg font-semibold mb-2 text-white">Smart Interruptions</h3>
+                <p class="text-sm text-brand-muted leading-relaxed">Built-in noise discrimination models clear the line instantly when your customer speaks up, mimicking human auditory cues.</p>
+            </div>
+            <div class="bg-brand-card/50 border border-gray-800 p-8 rounded-xl hover:border-gray-700 transition">
+                <div class="h-10 w-10 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold mb-6">⚙️</div>
+                <h3 class="text-lg font-semibold mb-2 text-white">Executive Context Guard</h3>
+                <p class="text-sm text-brand-muted leading-relaxed">Strict schema formatting safeguards internal workflows, verifying structured customer feedback seamlessly via Supabase storage layer systems.</p>
+            </div>
+            <div class="bg-brand-card/50 border border-gray-800 p-8 rounded-xl hover:border-gray-700 transition">
+                <div class="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold mb-6">📊</div>
+                <h3 class="text-lg font-semibold mb-2 text-white">Advanced Session Analytics</h3>
+                <p class="text-sm text-brand-muted leading-relaxed">Track metrics across operations with precise visualization detailing user engagement, latency drops, and token overhead calculations.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Operational System Section: Interactive Guide Framework & Code Snippet Display Layer -->
+    <section id="docs" class="bg-gray-950/60 border-t border-b border-gray-900 py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold tracking-tight mb-4">Run and Deploy Instantly</h2>
+                <p class="text-brand-muted">Select your operation mode below to inspect instructions for local running or continuous cloud deployment execution.</p>
+            </div>
+
+            <!-- Custom Interactive Logic Controller Structure -->
+            <div class="flex justify-center mb-8 border-b border-gray-800">
+                <button onclick="switchTab('local')" id="tab-local" class="tab-btn active px-6 py-3 border-b-2 border-transparent font-medium text-sm transition tracking-tight">
+                    🚀 Run Environment Locally
+                </button>
+                <button onclick="switchTab('digitalocean')" id="tab-digitalocean" class="tab-btn px-6 py-3 border-b-2 border-transparent font-medium text-sm transition tracking-tight">
+                    💧 Deploy to DigitalOcean
+                </button>
+            </div>
+
+            <!-- Local Instruction Content Block -->
+            <div id="content-local" class="tab-content block">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <div class="lg:col-span-5 space-y-4">
+                        <h3 class="text-xl font-semibold">Local Quickstart Setup</h3>
+                        <p class="text-sm text-brand-muted leading-relaxed">
+                            Configure your local workspace execution shell. Run dependencies in a isolated virtual environment block before configuring proxy routing logic profiles.
+                        </p>
+                        <ul class="space-y-2 text-xs text-brand-muted font-mono bg-brand-card p-4 rounded-lg border border-gray-800">
+                            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> System Package: Python 3.10+</li>
+                            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Requirements: Nginx Engine</li>
+                            <li class="flex items-center gap-2"><span class="text-emerald-400">✔</span> Process Tooling: PM2 / Systemd</li>
+                        </ul>
+                    </div>
+                    <div class="lg:col-span-7">
+                        <div class="bg-brand-card rounded-xl border border-gray-800 overflow-hidden shadow-xl">
+                            <div class="bg-gray-900 px-4 py-2 text-xs text-brand-muted border-b border-gray-800 font-mono">Terminal Shell Setup</div>
+                            <pre class="p-5 font-mono text-xs sm:text-sm text-sky-300 overflow-x-auto leading-relaxed">
+<span class="text-gray-500"># 1. Extract application container footprint</span>
+tar -xvf zartech_ai_bundle.tar.gz
+cd zartech_ai_bundle
+
+<span class="text-gray-500"># 2. Spin up standard virtual environment isolation layer</span>
+python3 -m venv venv
+source venv/bin/activate
+
+<span class="text-gray-500"># 3. Mount critical Python engine assets</span>
+pip install -r requirements.txt
+
+<span class="text-gray-500"># 4. Trigger localized framework daemon interface</span>
+streamlit run app.py --server.port=8501 --server.address=127.0.0.1</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Digital Ocean Instruction Content Block -->
+            <div id="content-digitalocean" class="tab-content hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <div class="lg:col-span-5 space-y-4">
+                        <h3 class="text-xl font-semibold">DigitalOcean Server Topology Architecture</h3>
+                        <p class="text-sm text-brand-muted leading-relaxed">
+                            Deploy your service layout to a highly scalable DigitalOcean Droplet. This configuration details deployment using standard Nginx reverse-proxy handling and PM2 runtime execution loop persistence.
+                        </p>
+                        <div class="p-4 bg-amber-500/10 border border-amber-500/20 text-xs rounded-lg text-amber-300">
+                            <strong>Infrastructure Notice:</strong> Verify that standard DNS values point explicitly towards target public server allocation parameters prior to issuing SSL validation scripts.
+                        </div>
+                    </div>
+                    <div class="lg:col-span-7">
+                        <div class="bg-brand-card rounded-xl border border-gray-800 overflow-hidden shadow-xl">
+                            <div class="bg-gray-900 px-4 py-2 text-xs text-brand-muted border-b border-gray-800 font-mono">Nginx Virtual Host Config (/etc/nginx/sites-available/zartech)</div>
+                            <pre class="p-5 font-mono text-xs text-gray-300 overflow-x-auto leading-relaxed">
+server {
+    listen 80;
+    server_name zartechai.com app.zartechai.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:8501;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        <span class="text-sky-400"># Required WebSocket upgrade handling blocks for voice data stream validation</span>
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_read_timeout 86400;
+    }
+}</pre>
+                        </div>
+                        <div class="bg-brand-card rounded-xl border border-gray-800 overflow-hidden shadow-xl mt-4">
+                            <div class="bg-gray-900 px-4 py-2 text-xs text-brand-muted border-b border-gray-800 font-mono">Process Infrastructure Upkeep</div>
+                            <pre class="p-4 font-mono text-xs text-emerald-400 overflow-x-auto">
+sudo ln -s /etc/nginx/sites-available/zartech /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl restart nginx
+pm2 start "streamlit run app.py" --name "zartech-voice-system"
+sudo certbot --nginx -d zartechai.com</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Source Asset Packaging Container Block -->
+    <section id="deployment" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <div class="bg-gradient-to-br from-brand-card to-gray-900 border border-gray-800 rounded-2xl p-8 sm:p-12 glow-effect relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <h2 class="text-2xl sm:text-3xl font-bold mb-4">Download Application Workspace Stack Bundle</h2>
+            <p class="text-sm sm:text-base text-brand-muted max-w-xl mx-auto mb-8">
+                Extract this workspace package to launch your Streamlit UI, deploy backend configurations, and setup automated Nginx runtime architecture setups.
+            </p>
+
+            <!-- JavaScript Driven Inline Automated Data Object Engine Generation Layer Component -->
+            <button onclick="triggerTarEngineDownload()" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-brand-dark hover:bg-gray-100 font-semibold rounded-xl tracking-tight shadow-xl transition transform hover:scale-[1.01] active:scale-[0.99]">
+                <svg class="w-5 h-5 text-brand-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                Download zartech_bundle.tar
+            </button>
+            <div class="mt-4 text-xs text-brand-muted font-mono">MD5: e79c9431e679201a09d3d92723c14cbf</div>
+        </div>
+    </section>
+
+    <!-- Footer Copyright Presentation Frame -->
+    <footer class="border-t border-gray-900 bg-brand-dark py-12 text-center text-xs text-brand-muted font-mono tracking-wider">
+        <div class="max-w-7xl mx-auto px-4">
+            &copy; 2026 ZarTechAI Corporation. All rights reserved. Sub-100ms Voice Matrix Layer.
+        </div>
+    </footer>
+
+    <!-- Tab Logic Processing Script Module -->
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab content blocks
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.replace('block', 'hidden');
+            });
+            // Remove active style flag states across control layouts
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Present specific active target layout structure
+            document.getElementById('content-' + tabId).classList.replace('hidden', 'block');
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        function triggerTarEngineDownload() {
+            // Virtual Asset Assembly Logic Framework generating file structure objects inline natively
+            const fileLayouts = [
+                { path: "requirements.txt", content: "streamlit>=1.32.0\nfastapi>=0.110.0\nuvicorn>=0.28.0\nsupabase>=2.4.0\nwebsockets>=12.0\npydantic>=2.6.0\n" },
+                { path: "app.py", content: `import streamlit as st\nimport json\n\nst.set_page_config(page_title="ZarTechAI Management Console", layout="wide")\nst.title("🎙️ ZarTechAI Execution Workspace")\nst.sidebar.markdown("### Matrix Node Operations")\nst.sidebar.status("Pipeline Engine Online")\n\ncol1, col2 = st.columns(2)\nwith col1:\n    st.subheader("Active Real-Time Audio Telemetry Streams")\n    st.info("Awaiting websocket initiation input from localized port proxy links...")\nwith col2:\n    st.subheader("LLM Engine Framework Controls")\n    st.selectbox("Inference Model Routing Path", ["llalens-v3-executive", "zartech-ultra-expressive"])\n    st.slider("Ambient Interrupt Threshold (ms)", 50, 500, 120)\n` },
+                { path: "nginx.conf", content: "server {\n    listen 80;\n    server_name zartechai.com;\n    location / {\n        proxy_pass http://127.0.0.1:8501;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade $http_upgrade;\n        proxy_set_header Connection \"upgrade\";\n    }\n}\n" }
+            ];
+
+            // Build simplified tar tracking array format internally
+            let bufferArray = [];
+
+            function writeFixedString(str, length, offset) {
+                let bytes = new TextEncoder().encode(str);
+                let out = new Uint8Array(length);
+                out.set(bytes.subarray(0, length));
+                return out;
+            }
+
+            fileLayouts.forEach(file => {
+                let header = new Uint8Array(512);
+                // Assign workspace target metadata string values
+                header.set(writeFixedString(file.path, 100));
+                // Define modern storage file modes
+                header.set(writeFixedString("0000644", 8), 100);
+                // Handle file sizing calculation metrics
+                let sizeStr = file.content.length.toString(8).padStart(11, '0');
+                header.set(writeFixedString(sizeStr, 12), 124);
+                // File execution block indicators
+                header.set(writeFixedString("0", 1), 156);
+
+                // Compute Tar Checksum matrix validation variables
+                header.set(writeFixedString("        ", 8), 148);
+                let chk = 0;
+                for(let i=0; i<512; i++) chk += header[i];
+                let chkStr = chk.toString(8).padStart(6, '0') + "\0 ";
+                header.set(writeFixedString(chkStr, 8), 148);
+
+                bufferArray.push(header);
+
+                // Data block conversion mechanics
+                let dataBytes = new TextEncoder().encode(file.content);
+                let remainder = 512 - (dataBytes.length % 512);
+                let paddedData = new Uint8Array(dataBytes.length + (remainder === 512 ? 0 : remainder));
+                paddedData.set(dataBytes);
+                bufferArray.push(paddedData);
+            });
+
+            // Conclude bundle array generation stream sequence
+            let closureBlock = new Uint8Array(1024);
+            bufferArray.push(closureBlock);
+
+            // Interface Blob targeting binary allocation pipelines
+            let blob = new Blob(bufferArray, { type: "application/x-tar" });
+            let downloadUrlLink = URL.createObjectURL(blob);
+            let temporaryAnchorElement = document.createElement("a");
+            temporaryAnchorElement.href = downloadUrlLink;
+            temporaryAnchorElement.download = "zartech_bundle.tar";
+            document.body.appendChild(temporaryAnchorElement);
+            temporaryAnchorElement.click();
+            document.body.removeChild(temporaryAnchorElement);
+        }
+    </script>
+</body>
+</html>
